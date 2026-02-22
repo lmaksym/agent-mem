@@ -1,9 +1,14 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync } from "node:fs";
-import { join, basename } from "node:path";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync, cpSync } from "node:fs";
+import { join, basename, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
 import { writeContextFile, readContextFile } from "../core/fs.js";
 import { writeConfig } from "../core/config.js";
 import { initGit, commitContext } from "../core/git.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const PACKAGE_ROOT = join(__dirname, "..", "..");
 
 export default async function init({ args, flags }) {
   const cwd = process.cwd();
@@ -98,6 +103,9 @@ export default async function init({ args, flags }) {
     branch: "main",
   });
 
+  // Install agent skill to detected IDE directories
+  const installedSkills = installSkills(cwd);
+
   // Initialize git
   initGit(contextDir);
   const hash = commitContext(contextDir, "init: bootstrap context");
@@ -116,14 +124,48 @@ Files created:
   config.yaml — settings
   memory/ — learned context (empty)
   branches/ — exploration branches (empty)
-
-${hash ? `Git commit: ${hash}` : ""}
+${installedSkills.length ? `\nSkill installed to:\n${installedSkills.map(s => `  ${s}`).join("\n")}` : ""}
+${hash ? `\nGit commit: ${hash}` : ""}
 
 Next steps:
   agent-context snapshot    — view your context
   agent-context write system/conventions.md — add your coding rules
   agent-context commit "added conventions"  — checkpoint
 `.trim());
+}
+
+/**
+ * Install the agent-context skill to the 3 universal Agent Skills directories.
+ * These cover ~14 of the 16 tools that support the agentskills.io standard:
+ *
+ *   .claude/skills/   — Claude Code, Goose, Amp, OpenCode, Cline
+ *   .agents/skills/   — Codex CLI, Gemini CLI, Amp, OpenCode, Warp, Roo Code, Goose
+ *   .github/skills/   — VS Code Copilot, GitHub Copilot
+ */
+function installSkills(cwd) {
+  const sourceDir = join(PACKAGE_ROOT, ".claude", "skills", "agent-context");
+  if (!existsSync(sourceDir)) return [];
+
+  const targets = [
+    ".claude/skills/agent-context",
+    ".agents/skills/agent-context",
+    ".github/skills/agent-context",
+  ];
+
+  const installed = [];
+
+  for (const skills of targets) {
+    const targetDir = join(cwd, skills);
+
+    try {
+      cpSync(sourceDir, targetDir, { recursive: true });
+      installed.push(skills);
+    } catch {
+      // Silent fail — permissions or other issues
+    }
+  }
+
+  return installed;
 }
 
 /**
