@@ -6,6 +6,7 @@
 const SECTION_MAP = [
   { key: "patterns", match: ["pattern"] },
   { key: "decisions", match: ["decision", "validated"] },
+  { key: "lessons", match: ["lesson"] },
   { key: "contradictions", match: ["contradict"] },
   { key: "stale", match: ["stale"] },
   { key: "gaps", match: ["gap", "new entr"] },

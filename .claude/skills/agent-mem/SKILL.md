@@ -1,7 +1,7 @@
 ---
 name: agent-mem
-description: Persistent, git-backed memory for coding sessions. Use when starting a session, remembering decisions/patterns/mistakes, branching for exploration, committing progress, or searching prior context.
-argument-hint: "[command] [args] — e.g., snapshot, commit <msg>, remember --decision <text>"
+description: Persistent, git-backed memory for coding sessions. Use when starting a session, remembering decisions/patterns/mistakes/lessons, recording problem→resolution pairs, branching for exploration, committing progress, or searching prior context.
+argument-hint: "[command] [args] — e.g., snapshot, commit <msg>, remember --decision <text>, lesson \"problem -> fix\""
 ---
 
 # agent-mem
@@ -24,6 +24,20 @@ If no `.context/` exists, run `agent-mem init` first.
 
 ## Core Commands
 
+### Remember vs Lesson — when to use what
+
+| You just... | Use | Example |
+|---|---|---|
+| Made an architectural choice | `remember --decision` | "Chose Payload CMS over Directus" |
+| Found a repeatable approach | `remember --pattern` | "Always check Grafana before fixing" |
+| Did something wrong to avoid | `remember --mistake` | "Never force-push fix branches" |
+| Have a general observation | `remember --note` | "Team prefers domain-driven structure" |
+| **Solved a problem after investigation** | **`lesson`** | "API 429 -> exponential backoff" |
+| **Debugged and fixed an issue** | **`lesson`** | "Voice cut off -> lower VAD threshold" |
+| **Hit an API/infra limitation and found workaround** | **`lesson`** | "OOM after 1hr -> close DB connections" |
+
+**Rule of thumb:** If there was a *problem* and you found a *resolution*, it's a lesson. If it's a one-liner rule or fact, use remember.
+
 ### Remember — structured memory
 
 ```bash
@@ -33,11 +47,17 @@ amem remember --mistake "Never force-push to fix branches — make new commits"
 amem remember --note "Team prefers domain-driven folder structure"
 ```
 
-### Lesson — problem/resolution pairs
+### Lesson — record what you solved and how
+
+Use after debugging sessions, fixing errors, working around API limitations, or any time you investigated a problem and found a fix.
 
 ```bash
-amem lesson "API 429 -> implement exponential backoff"
-amem lesson "OOM fix" --problem "Memory leak after 1hr" --resolution "Close DB connections" --tags "infra"
+# Quick shorthand (problem -> resolution)
+amem lesson "API 429 rate limit -> implement exponential backoff with jitter"
+amem lesson "Voice pipeline cutting off speech -> lower VAD threshold to 0.3"
+
+# Structured form with tags for better searchability
+amem lesson "OOM fix" --problem "Memory leak after 1hr" --resolution "Close DB connections in finally block" --tags "infra, database"
 ```
 
 ### Commit — checkpoint progress
@@ -98,14 +118,16 @@ amem help             # show all commands
 ```
 1. amem snapshot              ← understand current state
 2. ... do work ...
-3. amem remember --decision "chose X because Y"
-3b. amem lesson "problem -> resolution"   ← if you solved a non-trivial problem
-4. amem commit "what you did"
-5. amem branch explore-z      ← if uncertain
-6. ... explore ...
-7. amem merge explore-z "findings"
-8. amem commit "merged exploration results"
+3. amem remember --decision "chose X because Y"     ← record decisions, patterns, mistakes
+4. amem lesson "problem -> how you fixed it"         ← record any problem you solved
+5. amem commit "what you did"
+6. amem branch explore-z      ← if uncertain
+7. ... explore ...
+8. amem merge explore-z "findings"
+9. amem commit "merged exploration results"
 ```
+
+**After debugging or fixing errors:** Always record a lesson before committing. Future sessions will thank you.
 
 ## Additional References
 

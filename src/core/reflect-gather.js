@@ -296,12 +296,11 @@ export function gatherReflectionPrompt(ctxDir, flags) {
   lines.push("═══ REFLECTION QUESTIONS ═══");
   lines.push("");
   lines.push("1. PATTERNS: What recurring approaches or successful strategies emerged?");
-  lines.push("2. CONTRADICTIONS: Do any new entries conflict with existing ones?");
-  lines.push("3. CONSOLIDATION: Can entries be merged, clarified, or made more specific?");
+  lines.push("2. LESSONS: Were any problems debugged/fixed? Record each as a problem→resolution pair.");
+  lines.push("3. CONTRADICTIONS: Do any new entries conflict with existing ones?");
   lines.push("4. GAPS: What important context is NOT yet captured?");
-  lines.push("5. THEMES: What overarching directions are emerging?");
-  lines.push("6. STALE: Are any existing entries outdated?");
-  lines.push("7. LESSONS: Were any problems solved that should be recorded as problem→resolution pairs?");
+  lines.push("5. STALE: Are any existing entries outdated?");
+  lines.push("6. THEMES: What overarching directions are emerging?");
   lines.push("");
 
   // === INSTRUCTIONS ===
@@ -324,13 +323,15 @@ export function gatherReflectionPrompt(ctxDir, flags) {
   lines.push("## Stale Entries");
   lines.push("- <file>: <entry to flag>");
   lines.push("");
-  lines.push("## Gaps Filled");
-  lines.push("- type: decision|pattern|mistake|note");
-  lines.push("  text: <new entry to add>");
+  lines.push("## Lessons Learned");
   lines.push("- type: lesson");
   lines.push("  text: <short title>");
   lines.push("  problem: <what went wrong>");
   lines.push("  resolution: <what fixed it>");
+  lines.push("");
+  lines.push("## Gaps Filled");
+  lines.push("- type: decision|pattern|mistake|note");
+  lines.push("  text: <new entry to add>");
   lines.push("");
   lines.push("## Themes");
   lines.push("- <overarching theme>");

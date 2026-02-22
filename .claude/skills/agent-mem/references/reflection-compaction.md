@@ -55,10 +55,11 @@ Focused on real-time reliability. Key insight: connection != readiness."
 
 Include these sections (omit empty ones):
 - `## Patterns Identified` — recurring approaches that work
+- `## Lessons Learned` — problems solved: use `type: lesson`, `text:`, `problem:`, `resolution:` fields
 - `## Decisions Validated` — earlier decisions confirmed by recent work
 - `## Contradictions Found` — memory entries that conflict (include resolution)
 - `## Stale Entries` — entries to flag as outdated (format: `file: entry text`)
-- `## Gaps Filled` — new entries to add (use `type:` and `text:` sub-fields; for lessons also include `problem:` and `resolution:`)
+- `## Gaps Filled` — new entries to add (use `type:` and `text:` sub-fields)
 - `## Themes` — overarching directions
 - `## Summary` — 2-3 sentences
 

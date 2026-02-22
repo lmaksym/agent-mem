@@ -70,21 +70,23 @@ agent-mem read memory/decisions.md
 
 # 2. Do work...
 
-# 3. Record what you learned
+# 3. Record decisions, patterns, mistakes
 agent-mem remember --decision "Chose PKCE over implicit grant for mobile OAuth"
 agent-mem remember --pattern "Always validate WebSocket reconnection with heartbeat"
 agent-mem remember --mistake "Don't use dynamic imports for server components"
+
+# 4. Record lessons learned (any problem you debugged/fixed)
 agent-mem lesson "WebSocket reconnect -> validate readiness state, not just connection"
 
-# 4. Checkpoint progress
+# 5. Checkpoint progress
 agent-mem commit "implemented OAuth PKCE flow"
 
-# 5. Explore something uncertain
+# 6. Explore something uncertain
 agent-mem branch try-qdrant "evaluate Qdrant vs Pinecone"
 # ... experiment ...
 agent-mem merge try-qdrant "Qdrant wins — self-hosted, better filtering"
 
-# 6. Next session — everything is still there
+# 7. Next session — everything is still there
 agent-mem snapshot
 ```
 

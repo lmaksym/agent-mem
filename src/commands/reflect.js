@@ -94,8 +94,10 @@ async function doSave(ctxDir, args, flags) {
     } catch {}
   }
 
-  // Extract actionable items
-  const extractedGaps = parsed.recognized ? extractGaps(parsed.sections.gaps) : [];
+  // Extract actionable items (lessons can come from dedicated section or gaps)
+  const extractedLessons = parsed.recognized ? extractGaps(parsed.sections.lessons) : [];
+  const extractedGapsRaw = parsed.recognized ? extractGaps(parsed.sections.gaps) : [];
+  const extractedGaps = [...extractedLessons, ...extractedGapsRaw];
   const staleEntries = parsed.recognized ? extractStaleEntries(parsed.sections.stale) : [];
   const summary = parsed.recognized ? extractSummary(parsed.sections) : null;
 
