@@ -121,6 +121,39 @@ agent-context merge <name> [summary]  # Merge findings back to main
 agent-context branches                # List all branches
 ```
 
+### Compaction & Maintenance
+
+```bash
+agent-context compact                 # Archive stale, keep pins + recent
+agent-context compact --dry-run       # Preview what would be archived
+agent-context compact --hard          # Pins only, archive everything else
+agent-context forget <path>           # Remove memory file (archived first)
+agent-context resolve                 # Auto-resolve .context/ merge conflicts
+agent-context resolve --dry-run       # Preview resolution strategy
+agent-context diff <branch>           # Compare branch context with main
+```
+
+### Reflection
+
+```bash
+agent-context reflect                 # Gather reflection input
+agent-context reflect save --content "..."  # Save structured reflection
+agent-context reflect history         # Past reflections + themes
+agent-context reflect defrag          # Analyze memory health
+```
+
+### Sync & Sharing
+
+```bash
+agent-context sync                    # Export to IDE rule files (auto-detect)
+agent-context sync --claude           # Export to CLAUDE.md
+agent-context track                   # Toggle .context/ in project git
+agent-context push                    # Push .context/ to remote
+agent-context pull                    # Pull .context/ from remote
+agent-context share                   # Generate portable snapshot
+agent-context import <file>           # Import shared snapshot
+```
+
 ### Config
 
 ```bash
@@ -144,16 +177,17 @@ agent-context config set <key> <val>  # Update config
 │   ├── patterns.md      # Learned best practices
 │   └── mistakes.md      # Anti-patterns to avoid
 ├── branches/            # Exploration branches with purpose tracking
-└── reflections/         # (coming soon) Reflection outputs
+├── reflections/         # Reflection outputs and synthesis
+└── archive/             # Archived context from compact/forget (never deleted)
 ```
 
 Every change is git-versioned inside `.context/`. Human-readable markdown, diffable, shareable.
 
 ## Coming Soon
 
-- **`reflect`** — Background reflection that reviews recent commits and extracts patterns, decisions, and mistakes automatically
-- **Compaction** — Garbage collection for memory files that grow too large
 - **Multi-agent coordination** — Git worktrees for concurrent agent sessions
+- **Semantic search** — Vector-based search across context (current: grep)
+- **Sleep-time reflection** — Automated reflection triggered by commit thresholds
 
 ## Design Principles
 

@@ -20,12 +20,14 @@ MEMORY
   search <query>                         Search across all context files
   pin <path>                             Move file to system/ (always in context)
   unpin <path>                           Move file out of system/
+  forget <path>                          Remove a memory file (archived first)
 
 BRANCHES
   branch <name> [purpose]                Create exploration branch
   switch <name>                          Switch active branch
   merge <name> [summary]                 Merge branch back to main
   branches                               List all branches
+  diff <branch>                          Compare branch context with main
 
 COMPACTION
   compact                                Archive stale context, keep pins + recent

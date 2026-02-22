@@ -237,6 +237,72 @@ actx reflect save --content "..."
 actx unpin system/less-critical-file.md
 ```
 
+## When to COMPACT
+
+Compact when your context is bloated and you want to continue a task with less noise.
+
+```bash
+# Preview what would be archived
+actx compact --dry-run
+
+# Default: archive stale entries, keep pins + last 7 days
+actx compact
+
+# Hard mode: keep only pinned files, archive everything else
+actx compact --hard
+```
+
+**Use compact when:**
+- Context window is filling up mid-task
+- You want lower noise without losing critical decisions
+- Switching focus within the same session
+
+**Compact always:**
+- Auto-commits before running (safety net)
+- Archives to `.context/archive/compact-YYYY-MM-DD/` (never deletes)
+- Reports byte size before/after
+
+**Compact vs Reflect:** Compact is a pruner (removes noise). Reflect is a synthesizer (extracts insights). Different tools, clean separation.
+
+## When to RESOLVE
+
+After git operations that create merge conflicts in `.context/`:
+
+```bash
+# Preview resolution strategy per file
+actx resolve --dry-run
+
+# Auto-resolve all conflicts
+actx resolve
+```
+
+**Resolution strategies (automatic):**
+- `memory/` files → append-only merge (keep both sides, deduplicate exact matches)
+- `config.yaml` → prefer-ours (keep local settings)
+- Other files → keep-both (concatenate with separator)
+
+## When to DIFF
+
+Compare a branch's context against main before merging:
+
+```bash
+actx diff try-qdrant              # summary view
+actx diff try-qdrant --verbose    # show actual line changes
+```
+
+## When to FORGET
+
+Remove obsolete memory files (archived first for safety):
+
+```bash
+actx forget memory/old-notes.md
+```
+
+**Safety rules:**
+- Cannot forget pinned `system/` files — run `actx unpin` first
+- Cannot forget `config.yaml`
+- Always archives to `archive/forgotten-YYYY-MM-DD/` before deleting
+
 ## Coexistence with CLAUDE.md
 
 If the project has a CLAUDE.md:
