@@ -31,8 +31,9 @@ export default async function sync({ args, flags }) {
   // Auto-detect if no flags: sync to whatever already exists in the project
   if (!targets.length) {
     for (const [key, target] of Object.entries(TARGETS)) {
-      if (target.file && existsSync(join(root, target.file))) targets.push(key);
-      if (target.dir && existsSync(join(root, target.dir))) targets.push(key);
+      const fileExists = target.file && existsSync(join(root, target.file));
+      const dirExists = target.dir && existsSync(join(root, target.dir));
+      if (fileExists || dirExists) targets.push(key);
     }
     if (!targets.length) {
       console.log("ℹ️  No sync targets detected. Use flags to specify:");
