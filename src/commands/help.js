@@ -40,6 +40,13 @@ SYNC
                                          Export .context/ to IDE rule files
                                          Auto-detects existing files if no flags
 
+SHARING
+  track [--enable|--disable]             Toggle .context/ in project git
+  push [--remote <url>]                  Push .context/ to its own remote
+  pull [--remote <url>]                  Pull/clone .context/ from remote
+  share [--output <path>]               Generate portable snapshot file
+  import <file>                          Import a shared snapshot
+
 CONFIG
   config                                 Show current config
   config set <key> <value>               Update config value

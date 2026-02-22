@@ -43,6 +43,11 @@ const COMMANDS = {
   unpin: () => import("../src/commands/unpin.js"),
   reflect: () => import("../src/commands/reflect.js"),
   sync: () => import("../src/commands/sync.js"),
+  track: () => import("../src/commands/track.js"),
+  push: () => import("../src/commands/push.js"),
+  pull: () => import("../src/commands/pull.js"),
+  share: () => import("../src/commands/share.js"),
+  import: () => import("../src/commands/import.js"),
   config: () => import("../src/commands/config.js"),
   help: () => import("../src/commands/help.js"),
 };
@@ -62,8 +67,8 @@ async function main() {
     process.exit(1);
   }
 
-  // All commands except init and help require an existing .context/
-  if (command !== "init" && command !== "help") {
+  // All commands except init, help, pull, import require an existing .context/
+  if (!["init", "help", "pull", "import"].includes(command)) {
     const root = findContextRoot(process.cwd());
     if (!root) {
       console.error(`❌ No .context/ found. Run 'agent-context init' first.`);

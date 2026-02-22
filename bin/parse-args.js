@@ -36,6 +36,7 @@ export function parseArgs(argv) {
           "from-claude", "from-codex", "json", "no-fetch",
           "decision", "pattern", "mistake", "note",
           "all", "claude", "gemini", "codex", "cursor", "windsurf",
+          "enable", "disable", "merge", "dry-run",
           "dry-run", "compaction",
         ]);
         if (BOOLEAN_FLAGS.has(key)) {
