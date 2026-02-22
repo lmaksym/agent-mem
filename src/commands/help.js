@@ -28,7 +28,12 @@ BRANCHES
   branches                               List all branches
 
 REFLECTION
-  reflect                                Analyze recent context + suggest improvements
+  reflect                                Gather reflection input (default: gather)
+  reflect gather [--since <ref>] [--deep] [--compaction]
+                                         Collect recent activity for reflection
+  reflect save [--content <text>]        Save agent's reflection output
+  reflect history [--last <n>]           Show past reflections
+  reflect defrag [--dry-run]             Analyze memory health
 
 CONFIG
   config                                 Show current config
@@ -47,6 +52,10 @@ EXAMPLES
   agent-context remember --pattern "always check Grafana before fixing"
   agent-context remember --mistake "never force-push fix branches"
   agent-context search "authentication"
+  agent-context reflect
+  agent-context reflect save --content "## Patterns Identified..."
+  agent-context reflect history
+  agent-context reflect defrag --dry-run
 
 MORE INFO
   https://github.com/lmaksym/agent-context

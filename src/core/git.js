@@ -87,3 +87,89 @@ export function hasChanges(contextDir) {
     return false;
   }
 }
+
+/**
+ * Get commit log since a ref. Returns array of { hash, message, date }.
+ * If sinceRef is null, returns all commits.
+ */
+export function gitLog(contextDir, sinceRef, maxCount = 50) {
+  try {
+    const range = sinceRef ? `${sinceRef}..HEAD` : "HEAD";
+    const raw = git(`log ${range} --format="%h|%s|%ai" -n ${maxCount}`, contextDir);
+    if (!raw) return [];
+    return raw.split("\n").map((line) => {
+      const [hash, message, date] = line.split("|");
+      return { hash, message, date };
+    });
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Get total commit count since a ref.
+ */
+export function commitCountSince(contextDir, sinceRef) {
+  try {
+    if (!sinceRef) return commitCount(contextDir);
+    const raw = git(`rev-list --count ${sinceRef}..HEAD`, contextDir);
+    return parseInt(raw, 10);
+  } catch {
+    return 0;
+  }
+}
+
+/**
+ * Get diff stats since a ref. Returns array of { file, added, removed }.
+ */
+export function gitDiffStat(contextDir, sinceRef) {
+  try {
+    const range = sinceRef ? `${sinceRef}..HEAD` : `$(git rev-list --max-parents=0 HEAD)..HEAD`;
+    const raw = git(`diff --numstat ${range}`, contextDir);
+    if (!raw) return [];
+    return raw.split("\n").filter(Boolean).map((line) => {
+      const [added, removed, file] = line.split("\t");
+      return {
+        file,
+        added: added === "-" ? 0 : parseInt(added, 10),
+        removed: removed === "-" ? 0 : parseInt(removed, 10),
+      };
+    });
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Get full diff for specific path since a ref.
+ */
+export function gitDiffFiles(contextDir, sinceRef, path) {
+  try {
+    const range = sinceRef ? `${sinceRef}..HEAD` : `$(git rev-list --max-parents=0 HEAD)..HEAD`;
+    return git(`diff ${range} -- ${path}`, contextDir);
+  } catch {
+    return "";
+  }
+}
+
+/**
+ * Get file content at a specific ref.
+ */
+export function gitShowFile(contextDir, ref, path) {
+  try {
+    return git(`show ${ref}:${path}`, contextDir);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Get the first commit hash in the repo.
+ */
+export function firstCommit(contextDir) {
+  try {
+    return git("rev-list --max-parents=0 HEAD", contextDir).split("\n")[0];
+  } catch {
+    return null;
+  }
+}

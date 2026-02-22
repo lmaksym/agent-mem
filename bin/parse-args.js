@@ -35,6 +35,7 @@ export function parseArgs(argv) {
           "help", "h", "verbose", "force", "deep", "compare", "landscape",
           "from-claude", "from-codex", "json", "no-fetch",
           "decision", "pattern", "mistake", "note",
+          "dry-run", "compaction",
         ]);
         if (BOOLEAN_FLAGS.has(key)) {
           flags[key] = true;
