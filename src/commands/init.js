@@ -110,6 +110,10 @@ export default async function init({ args, flags }) {
   initGit(contextDir);
   const hash = commitContext(contextDir, "init: bootstrap context");
 
+  // Auto-sync to detected IDE rule files
+  const syncMod = await import("./sync.js");
+  await syncMod.default({ args: [], flags: { ...flags, _contextRoot: cwd } });
+
   // Output
   const systemFiles = readdirSync(join(contextDir, "system")).filter(f => !f.startsWith("."));
   console.log(`

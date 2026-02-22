@@ -7,7 +7,7 @@ USAGE
   amem <command> [args] [flags]
 
 CORE
-  init [--from-claude] [--from-codex]   Bootstrap context from codebase
+  init [--from-claude] [--from-codex]   Bootstrap context + auto-sync IDE rules
   snapshot                               Context tree (agent's primary view)
   read <path>                            Read a context file
   write <path> [--content <text>]        Write/update a context file (reads stdin if no --content)
