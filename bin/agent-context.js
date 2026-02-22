@@ -43,6 +43,7 @@ const COMMANDS = {
   unpin: () => import("../src/commands/unpin.js"),
   reflect: () => import("../src/commands/reflect.js"),
   compact: () => import("../src/commands/compact.js"),
+  resolve: () => import("../src/commands/resolve.js"),
   sync: () => import("../src/commands/sync.js"),
   track: () => import("../src/commands/track.js"),
   push: () => import("../src/commands/push.js"),

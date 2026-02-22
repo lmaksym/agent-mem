@@ -32,6 +32,10 @@ COMPACTION
   compact --dry-run                      Preview what would be archived
   compact --hard                         Pins only, archive everything else
 
+CONFLICTS
+  resolve                                Auto-resolve .context/ merge conflicts
+  resolve --dry-run                      Preview resolution strategy per file
+
 REFLECTION
   reflect                                Gather reflection input (default: gather)
   reflect gather [--since <ref>] [--deep] [--compaction]
