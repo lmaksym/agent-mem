@@ -73,6 +73,17 @@ export default async function init({ args, flags }) {
     importClaudeMd(cwd, contextDir);
   }
 
+  // Import session histories
+  if (flags["from-claude"]) {
+    const { importClaudeHistory } = await import("../core/importers.js");
+    importClaudeHistory(cwd, contextDir);
+  }
+
+  if (flags["from-codex"]) {
+    const { importCodexHistory } = await import("../core/importers.js");
+    importCodexHistory(cwd, contextDir);
+  }
+
   // Write default config
   writeConfig(contextDir, {
     auto_commit: false,
