@@ -42,11 +42,30 @@ export default async function snapshot({ args, flags }) {
     }
   }
 
-  // Memory files (summary only)
-  const memoryFiles = tree.filter((e) => e.path.startsWith("memory/") && !e.isDir);
-  if (memoryFiles.length) {
-    lines.push(`MEMORY (${memoryFiles.length} files):`);
-    for (const f of memoryFiles) {
+  // Memory files — branch-scoped when on a branch
+  const branchMemPrefix = branch !== "main" ? `branches/${branch}/memory/` : null;
+  const branchMemFiles = branchMemPrefix
+    ? tree.filter((e) => e.path.startsWith(branchMemPrefix) && !e.isDir)
+    : [];
+  const globalMemFiles = tree.filter((e) => e.path.startsWith("memory/") && !e.isDir);
+
+  if (branchMemPrefix && branchMemFiles.length) {
+    lines.push(`MEMORY [branch: ${branch}] (${branchMemFiles.length} files):`);
+    for (const f of branchMemFiles) {
+      lines.push(`  ${f.name} — ${f.description || "(no description)"}`);
+    }
+    lines.push("");
+  }
+
+  if (branchMemPrefix && globalMemFiles.length) {
+    lines.push(`MEMORY [main] (${globalMemFiles.length} files — use 'actx read memory/<file>' for global):`);
+    for (const f of globalMemFiles) {
+      lines.push(`  ${f.name} — ${f.description || "(no description)"}`);
+    }
+    lines.push("");
+  } else if (!branchMemPrefix && globalMemFiles.length) {
+    lines.push(`MEMORY (${globalMemFiles.length} files):`);
+    for (const f of globalMemFiles) {
       lines.push(`  ${f.name} — ${f.description || "(no description)"}`);
     }
     lines.push("");

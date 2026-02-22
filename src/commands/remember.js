@@ -1,5 +1,6 @@
 import { contextDir as getContextDir } from "../core/context-root.js";
 import { readContextFile, writeContextFile } from "../core/fs.js";
+import { readConfig } from "../core/config.js";
 
 const CATEGORIES = {
   decision: { file: "memory/decisions.md", title: "Decisions", desc: "Architectural decisions and rationale" },
@@ -7,6 +8,18 @@ const CATEGORIES = {
   mistake: { file: "memory/mistakes.md", title: "Mistakes", desc: "Anti-patterns and things to avoid" },
   note: { file: "memory/notes.md", title: "Notes", desc: "Quick notes and observations" },
 };
+
+/**
+ * Resolve memory file path based on active branch.
+ * On main: memory/notes.md
+ * On branch: branches/<name>/memory/notes.md
+ */
+function resolvePath(target, branch) {
+  if (branch && branch !== "main") {
+    return target.replace(/^memory\//, `branches/${branch}/memory/`);
+  }
+  return target;
+}
 
 export default async function remember({ args, flags }) {
   const root = flags._contextRoot;
@@ -44,7 +57,10 @@ export default async function remember({ args, flags }) {
     process.exit(1);
   }
 
-  const target = flags.file || CATEGORIES[category].file;
+  const config = readConfig(ctxDir);
+  const branch = config.branch || "main";
+  const baseTarget = flags.file || CATEGORIES[category].file;
+  const target = resolvePath(baseTarget, branch);
   const { title, desc } = CATEGORIES[category] || CATEGORIES.note;
   const text = args.join(" ");
   const date = new Date().toISOString().slice(0, 10);
@@ -62,7 +78,8 @@ export default async function remember({ args, flags }) {
   existing += `\n- [${date} ${time}] ${text}`;
 
   writeContextFile(ctxDir, target, existing);
-  console.log(`✅ REMEMBERED (${category}) → .context/${target}`);
+  const branchLabel = branch !== "main" ? ` [branch: ${branch}]` : "";
+  console.log(`✅ REMEMBERED (${category})${branchLabel} → .context/${target}`);
   console.log(`  "${text}"`);
 
   // Auto-commit if enabled

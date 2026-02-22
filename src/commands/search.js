@@ -1,5 +1,6 @@
 import { contextDir as getContextDir } from "../core/context-root.js";
 import { buildTree, readContextFile } from "../core/fs.js";
+import { readConfig } from "../core/config.js";
 
 export default async function search({ args, flags }) {
   const root = flags._contextRoot;
@@ -10,12 +11,28 @@ export default async function search({ args, flags }) {
     process.exit(1);
   }
 
+  const config = readConfig(ctxDir);
+  const branch = config.branch || "main";
   const query = args.join(" ").toLowerCase();
   const tree = buildTree(ctxDir);
+
+  // When on a branch, search branch memory first, then system/ and global memory
+  // Skip global memory/ duplicates to avoid noise
   const files = tree.filter((e) => !e.isDir);
+  const branchMemPrefix = branch !== "main" ? `branches/${branch}/memory/` : null;
+
+  const searchFiles = branchMemPrefix
+    ? files.filter((f) => {
+        // Include branch memory, system/, reflections, config — skip global memory/
+        if (f.path.startsWith(branchMemPrefix)) return true;
+        if (f.path.startsWith("memory/")) return false;
+        return true;
+      })
+    : files;
+
   const results = [];
 
-  for (const file of files) {
+  for (const file of searchFiles) {
     const content = readContextFile(ctxDir, file.path);
     if (!content) continue;
 
@@ -36,7 +53,8 @@ export default async function search({ args, flags }) {
     return;
   }
 
-  console.log(`🔍 SEARCH: "${args.join(" ")}" (${results.length} matches)\n`);
+  const branchLabel = branchMemPrefix ? ` [branch: ${branch}]` : "";
+  console.log(`🔍 SEARCH${branchLabel}: "${args.join(" ")}" (${results.length} matches)\n`);
 
   // Group by file, show top 20
   const shown = results.slice(0, 20);
