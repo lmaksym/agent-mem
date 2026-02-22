@@ -86,6 +86,11 @@ $ACTX reflect save --content "## Patterns Identified\n..."
 $ACTX reflect defrag       # Check memory health
 ```
 
-## For detailed command reference
+## Detailed References
 
-See [references/full-skill.md](references/full-skill.md) — the complete Claude Code skill with all commands, workflows, and examples.
+Load only when needed for the specific topic:
+
+- **[references/memory-workflow.md](references/memory-workflow.md)** — when/how to remember, search, pin, forget, read/write
+- **[references/branching-guide.md](references/branching-guide.md)** — branch, merge, diff — exploration workflow
+- **[references/reflection-compaction.md](references/reflection-compaction.md)** — reflect cycle, compact, defrag — context maintenance
+- **[references/sub-agent-patterns.md](references/sub-agent-patterns.md)** — spawn templates, timeout recovery, parallel splits, metrics tracking
