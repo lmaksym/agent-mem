@@ -35,6 +35,11 @@ REFLECTION
   reflect history [--last <n>]           Show past reflections
   reflect defrag [--dry-run]             Analyze memory health
 
+SYNC
+  sync [--claude|--gemini|--codex|--cursor|--windsurf|--all]
+                                         Export .context/ to IDE rule files
+                                         Auto-detects existing files if no flags
+
 CONFIG
   config                                 Show current config
   config set <key> <value>               Update config value

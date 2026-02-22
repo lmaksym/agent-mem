@@ -42,6 +42,7 @@ const COMMANDS = {
   pin: () => import("../src/commands/pin.js"),
   unpin: () => import("../src/commands/unpin.js"),
   reflect: () => import("../src/commands/reflect.js"),
+  sync: () => import("../src/commands/sync.js"),
   config: () => import("../src/commands/config.js"),
   help: () => import("../src/commands/help.js"),
 };
