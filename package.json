@@ -25,12 +25,21 @@
   ],
   "author": "Maksym Lypivskyi",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lmaksym/agent-context.git"
+  },
+  "homepage": "https://github.com/lmaksym/agent-context",
+  "bugs": {
+    "url": "https://github.com/lmaksym/agent-context/issues"
+  },
   "engines": {
     "node": ">=18"
   },
   "files": [
     "bin/",
     "src/",
+    ".claude/",
     "LICENSE",
     "README.md"
   ]

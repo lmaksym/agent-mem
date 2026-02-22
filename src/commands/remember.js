@@ -64,4 +64,8 @@ export default async function remember({ args, flags }) {
   writeContextFile(ctxDir, target, existing);
   console.log(`✅ REMEMBERED (${category}) → .context/${target}`);
   console.log(`  "${text}"`);
+
+  // Auto-commit if enabled
+  const { maybeAutoCommit } = await import("../core/auto-commit.js");
+  maybeAutoCommit(ctxDir, `remember ${category}`);
 }

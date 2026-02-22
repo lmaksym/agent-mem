@@ -27,6 +27,9 @@ BRANCHES
   merge <name> [summary]                 Merge branch back to main
   branches                               List all branches
 
+REFLECTION
+  reflect                                Analyze recent context + suggest improvements
+
 CONFIG
   config                                 Show current config
   config set <key> <value>               Update config value

@@ -34,6 +34,10 @@ export default async function write({ args, flags }) {
   writeContextFile(ctxDir, relPath, content);
 
   console.log(`✅ ${existed ? "UPDATED" : "CREATED"}: .context/${relPath} (${content.length} chars)`);
+
+  // Auto-commit if enabled
+  const { maybeAutoCommit } = await import("../core/auto-commit.js");
+  maybeAutoCommit(ctxDir, `write ${relPath}`);
 }
 
 function readStdin() {
