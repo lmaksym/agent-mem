@@ -61,6 +61,9 @@ EXAMPLES
   agent-context reflect save --content "## Patterns Identified..."
   agent-context reflect history
   agent-context reflect defrag --dry-run
+  agent-context sync                     # auto-detect IDE files
+  agent-context sync --claude            # export to CLAUDE.md
+  agent-context sync --all               # export to all IDE formats
 
 MORE INFO
   https://github.com/lmaksym/agent-context

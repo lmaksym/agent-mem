@@ -1,7 +1,7 @@
-import { existsSync, mkdirSync, writeFileSync, readFileSync } from "node:fs";
-import { join, basename } from "node:path";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { contextDir as getContextDir } from "../core/context-root.js";
-import { buildTree, readContextFile, listFiles } from "../core/fs.js";
+import { buildTree, readContextFile } from "../core/fs.js";
 import { readConfig } from "../core/config.js";
 
 const TARGETS = {
@@ -115,7 +115,7 @@ function gatherMemorySummary(ctxDir) {
       const lastThree = bullets.slice(-3);
       lines.push(`### ${f.name.replace(".md", "")}`);
       lines.push(...lastThree);
-      if (bullets.length > 3) lines.push(`_(${bullets.length - 3} more — run \`agent-context read memory/${f.path}\`)_`);
+      if (bullets.length > 3) lines.push(`_(${bullets.length - 3} more — run \`agent-context read ${f.path}\`)_`);
       lines.push("");
     }
   }
