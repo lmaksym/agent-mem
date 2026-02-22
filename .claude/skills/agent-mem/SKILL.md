@@ -33,6 +33,13 @@ amem remember --mistake "Never force-push to fix branches — make new commits"
 amem remember --note "Team prefers domain-driven folder structure"
 ```
 
+### Lesson — problem/resolution pairs
+
+```bash
+amem lesson "API 429 -> implement exponential backoff"
+amem lesson "OOM fix" --problem "Memory leak after 1hr" --resolution "Close DB connections" --tags "infra"
+```
+
 ### Commit — checkpoint progress
 
 Commit after meaningful progress, not every small change. Good triggers: feature complete, architectural decision made, before switching tasks, before ending session.
@@ -92,6 +99,7 @@ amem help             # show all commands
 1. amem snapshot              ← understand current state
 2. ... do work ...
 3. amem remember --decision "chose X because Y"
+3b. amem lesson "problem -> resolution"   ← if you solved a non-trivial problem
 4. amem commit "what you did"
 5. amem branch explore-z      ← if uncertain
 6. ... explore ...

@@ -53,11 +53,11 @@ export function getReflectionFiles(ctxDir) {
 }
 
 /**
- * Count entries in a memory file (lines matching `^- [`).
+ * Count entries in a memory file (lines matching `^- [` or `^### [`).
  */
 function countEntries(content) {
   if (!content) return 0;
-  return content.split("\n").filter((l) => /^- \[/.test(l)).length;
+  return content.split("\n").filter((l) => /^- \[/.test(l) || /^### \[/.test(l)).length;
 }
 
 /**
@@ -65,9 +65,9 @@ function countEntries(content) {
  */
 function lastEntryDate(content) {
   if (!content) return null;
-  const lines = content.split("\n").filter((l) => /^- \[/.test(l));
+  const lines = content.split("\n").filter((l) => /^- \[/.test(l) || /^### \[/.test(l));
   if (!lines.length) return null;
-  const match = lines[lines.length - 1].match(/^- \[(\d{4}-\d{2}-\d{2})/);
+  const match = lines[lines.length - 1].match(/^(?:- |### )\[(\d{4}-\d{2}-\d{2})/);
   return match ? match[1] : null;
 }
 
@@ -254,8 +254,8 @@ export function gatherReflectionPrompt(ctxDir, flags) {
       if (mf.entries === 0) {
         lines.push("  (empty)");
       } else {
-        // Show all entries for cross-reference
-        const entryLines = mf.content.split("\n").filter((l) => /^- \[/.test(l));
+        // Show all entries for cross-reference (bullet entries and lesson headings)
+        const entryLines = mf.content.split("\n").filter((l) => /^- \[/.test(l) || /^### \[/.test(l));
         for (const entry of entryLines) {
           lines.push(`  ${entry}`);
         }
@@ -301,6 +301,7 @@ export function gatherReflectionPrompt(ctxDir, flags) {
   lines.push("4. GAPS: What important context is NOT yet captured?");
   lines.push("5. THEMES: What overarching directions are emerging?");
   lines.push("6. STALE: Are any existing entries outdated?");
+  lines.push("7. LESSONS: Were any problems solved that should be recorded as problem→resolution pairs?");
   lines.push("");
 
   // === INSTRUCTIONS ===
@@ -326,6 +327,10 @@ export function gatherReflectionPrompt(ctxDir, flags) {
   lines.push("## Gaps Filled");
   lines.push("- type: decision|pattern|mistake|note");
   lines.push("  text: <new entry to add>");
+  lines.push("- type: lesson");
+  lines.push("  text: <short title>");
+  lines.push("  problem: <what went wrong>");
+  lines.push("  resolution: <what fixed it>");
   lines.push("");
   lines.push("## Themes");
   lines.push("- <overarching theme>");

@@ -74,6 +74,7 @@ agent-mem read memory/decisions.md
 agent-mem remember --decision "Chose PKCE over implicit grant for mobile OAuth"
 agent-mem remember --pattern "Always validate WebSocket reconnection with heartbeat"
 agent-mem remember --mistake "Don't use dynamic imports for server components"
+agent-mem lesson "WebSocket reconnect -> validate readiness state, not just connection"
 
 # 4. Checkpoint progress
 agent-mem commit "implemented OAuth PKCE flow"
@@ -109,6 +110,8 @@ agent-mem remember --decision "chose X because Y"   # → memory/decisions.md
 agent-mem remember --pattern "always do X before Y"  # → memory/patterns.md
 agent-mem remember --mistake "never do X"            # → memory/mistakes.md
 agent-mem remember --note "general observation"      # → memory/notes.md
+agent-mem lesson "API 429 -> implement backoff"      # → memory/lessons.md (shorthand)
+agent-mem lesson "fix" --problem "OOM" --resolution "close DB conns" --tags "infra"
 agent-mem search <query>          # Grep across all context files
 agent-mem pin <path>              # Move to system/ (always in context)
 agent-mem unpin <path>            # Move out of system/
@@ -182,7 +185,8 @@ agent-mem config set <key> <val>  # Update config
 ├── memory/              # Learned context (tree visible, content on demand)
 │   ├── decisions.md     # Architectural decisions with rationale
 │   ├── patterns.md      # Learned best practices
-│   └── mistakes.md      # Anti-patterns to avoid
+│   ├── mistakes.md      # Anti-patterns to avoid
+│   └── lessons.md       # Lessons learned (problem/resolution pairs)
 ├── branches/            # Exploration branches with purpose tracking
 ├── reflections/         # Reflection outputs and synthesis
 └── archive/             # Archived context from compact/forget (never deleted)

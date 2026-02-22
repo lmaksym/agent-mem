@@ -26,6 +26,7 @@ function contextByteSize(ctxDir) {
 
 /**
  * Collect all entry lines from a memory file with dates.
+ * Handles both bullet entries (- [date]) and block entries (### [date] for lessons).
  * Returns { header: string, entries: Array<{ line: string, date: Date|null, raw: string }> }
  */
 function parseMemoryFile(content) {
@@ -33,8 +34,35 @@ function parseMemoryFile(content) {
   const headerLines = [];
   const entries = [];
   let inHeader = true;
+  let currentBlock = null;
 
   for (const line of lines) {
+    // Block entry (lessons): ### [2026-02-21 14:30] Title
+    const blockMatch = line.match(/^### \[(\d{4}-\d{2}-\d{2})[\s\d:]*\]\s*.+/);
+    if (blockMatch) {
+      // Push previous block if any
+      if (currentBlock) {
+        entries.push(currentBlock);
+      }
+      inHeader = false;
+      currentBlock = {
+        line: line,
+        date: new Date(blockMatch[1]),
+        raw: line,
+        isStale: false,
+        _blockLines: [line],
+      };
+      continue;
+    }
+
+    // If we're inside a block, accumulate lines
+    if (currentBlock) {
+      currentBlock._blockLines.push(line);
+      currentBlock.line = currentBlock._blockLines.join("\n");
+      currentBlock.raw = currentBlock.line;
+      continue;
+    }
+
     const entryMatch = line.match(/^- \[(\d{4}-\d{2}-\d{2})[\s\d:]*\]\s*.+/);
     // Also catch stale markers
     const staleMarker = line.match(/^- \[\d{4}-\d{2}-\d{2} STALE\]/);
@@ -54,6 +82,11 @@ function parseMemoryFile(content) {
       headerLines.push(line);
     }
     // Lines after entries that aren't entries (blank lines between entries, etc.)
+  }
+
+  // Push last block if any
+  if (currentBlock) {
+    entries.push(currentBlock);
   }
 
   return { header: headerLines.join("\n"), entries };

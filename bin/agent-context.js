@@ -46,6 +46,7 @@ const COMMANDS = {
   resolve: () => import("../src/commands/resolve.js"),
   diff: () => import("../src/commands/diff.js"),
   forget: () => import("../src/commands/forget.js"),
+  lesson: () => import("../src/commands/lesson.js"),
   sync: () => import("../src/commands/sync.js"),
   track: () => import("../src/commands/track.js"),
   push: () => import("../src/commands/push.js"),

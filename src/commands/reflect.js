@@ -11,6 +11,7 @@ const MEMORY_CATEGORIES = {
   pattern: { file: "memory/patterns.md", title: "Patterns", desc: "Learned patterns and best practices" },
   mistake: { file: "memory/mistakes.md", title: "Mistakes", desc: "Anti-patterns and things to avoid" },
   note: { file: "memory/notes.md", title: "Notes", desc: "Quick notes and observations" },
+  lesson: { file: "memory/lessons.md", title: "Lessons Learned", desc: "Lessons learned — problem/resolution pairs" },
 };
 
 export default async function reflect({ args, flags }) {
@@ -127,7 +128,15 @@ async function doSave(ctxDir, args, flags) {
       readContextFile(ctxDir, cat.file) ||
       ["---", `description: "${cat.desc}"`, "---", "", `# ${cat.title}`, ""].join("\n");
 
-    existing += `\n- [${date} ${time}] ${gap.text}`;
+    if (gap.type === "lesson") {
+      // Structured block format for lessons
+      let block = `\n### [${date} ${time}] ${gap.text}\n`;
+      block += `**Problem:** ${gap.problem || gap.text}\n`;
+      block += `**Resolution:** ${gap.resolution || gap.text}\n`;
+      existing += block;
+    } else {
+      existing += `\n- [${date} ${time}] ${gap.text}`;
+    }
     writeContextFile(ctxDir, cat.file, existing);
 
     if (!extracted[cat.file]) extracted[cat.file] = 0;

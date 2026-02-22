@@ -110,8 +110,8 @@ function gatherMemorySummary(ctxDir) {
   for (const f of files) {
     const raw = readContextFile(ctxDir, f.path);
     if (!raw) continue;
-    // Extract bullet points (the actual memories)
-    const bullets = raw.split("\n").filter((l) => l.startsWith("- ["));
+    // Extract entries (bullet entries or lesson headings)
+    const bullets = raw.split("\n").filter((l) => l.startsWith("- [") || l.startsWith("### ["));
     if (bullets.length) {
       const lastThree = bullets.slice(-3);
       lines.push(`### ${f.name.replace(".md", "")}`);

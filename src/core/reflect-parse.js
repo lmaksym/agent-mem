@@ -59,9 +59,20 @@ export function parseReflection(text) {
 }
 
 /**
+ * Build a gap entry object. For lessons, includes problem/resolution fields.
+ */
+function buildGapEntry(type, text, problem, resolution) {
+  const entry = { type: type.toLowerCase(), text };
+  if (type.toLowerCase() === "lesson" && problem) entry.problem = problem;
+  if (type.toLowerCase() === "lesson" && resolution) entry.resolution = resolution;
+  return entry;
+}
+
+/**
  * Extract structured "Gaps Filled" entries.
  * Looks for "type: <category>" and "text: <content>" patterns.
- * Returns array of { type, text }.
+ * For lessons, also extracts "problem:" and "resolution:" fields.
+ * Returns array of { type, text, problem?, resolution? }.
  */
 export function extractGaps(lines) {
   if (!lines || !lines.length) return [];
@@ -69,18 +80,22 @@ export function extractGaps(lines) {
   const entries = [];
   let currentType = null;
   let currentText = null;
+  let currentProblem = null;
+  let currentResolution = null;
 
   for (const line of lines) {
     const trimmed = line.trim().replace(/^-\s*/, "");
 
-    const typeMatch = trimmed.match(/^type:\s*(decision|pattern|mistake|note)/i);
+    const typeMatch = trimmed.match(/^type:\s*(decision|pattern|mistake|note|lesson)/i);
     if (typeMatch) {
       // If we had a previous entry, push it
       if (currentType && currentText) {
-        entries.push({ type: currentType.toLowerCase(), text: currentText });
+        entries.push(buildGapEntry(currentType, currentText, currentProblem, currentResolution));
       }
       currentType = typeMatch[1];
       currentText = null;
+      currentProblem = null;
+      currentResolution = null;
       continue;
     }
 
@@ -90,9 +105,21 @@ export function extractGaps(lines) {
       continue;
     }
 
+    const problemMatch = trimmed.match(/^problem:\s*(.+)/);
+    if (problemMatch) {
+      currentProblem = problemMatch[1].trim();
+      continue;
+    }
+
+    const resolutionMatch = trimmed.match(/^resolution:\s*(.+)/);
+    if (resolutionMatch) {
+      currentResolution = resolutionMatch[1].trim();
+      continue;
+    }
+
     // If line doesn't match type/text pattern, treat as inline entry
     // e.g. "- type: pattern, text: Always do X"
-    const inlineMatch = trimmed.match(/type:\s*(decision|pattern|mistake|note)\s*[,;]\s*text:\s*(.+)/i);
+    const inlineMatch = trimmed.match(/type:\s*(decision|pattern|mistake|note|lesson)\s*[,;]\s*text:\s*(.+)/i);
     if (inlineMatch) {
       entries.push({ type: inlineMatch[1].toLowerCase(), text: inlineMatch[2].trim() });
       currentType = null;
@@ -102,7 +129,7 @@ export function extractGaps(lines) {
 
   // Push last entry
   if (currentType && currentText) {
-    entries.push({ type: currentType.toLowerCase(), text: currentText });
+    entries.push(buildGapEntry(currentType, currentText, currentProblem, currentResolution));
   }
 
   return entries;

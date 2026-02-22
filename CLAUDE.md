@@ -50,7 +50,7 @@ export default async function commandName({ args, flags }) { ... }
 ├── main.md              # Project roadmap/goals
 ├── config.yaml          # Settings
 ├── system/              # Pinned files — always loaded in snapshot (max 10)
-├── memory/              # Learned context (decisions, patterns, mistakes, notes)
+├── memory/              # Learned context (decisions, patterns, mistakes, notes, lessons)
 ├── branches/<name>/     # Exploration branches with scoped memory
 ├── reflections/         # Structured synthesis outputs
 └── archive/             # Compacted/forgotten files (never deleted)

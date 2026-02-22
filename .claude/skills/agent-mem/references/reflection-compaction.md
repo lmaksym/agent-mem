@@ -58,7 +58,7 @@ Include these sections (omit empty ones):
 - `## Decisions Validated` — earlier decisions confirmed by recent work
 - `## Contradictions Found` — memory entries that conflict (include resolution)
 - `## Stale Entries` — entries to flag as outdated (format: `file: entry text`)
-- `## Gaps Filled` — new entries to add (use `type:` and `text:` sub-fields)
+- `## Gaps Filled` — new entries to add (use `type:` and `text:` sub-fields; for lessons also include `problem:` and `resolution:`)
 - `## Themes` — overarching directions
 - `## Summary` — 2-3 sentences
 

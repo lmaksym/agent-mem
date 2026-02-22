@@ -17,6 +17,9 @@ CORE
 MEMORY
   remember [--decision|--pattern|--mistake|--note] <text>
                                          Add to memory (structured categories)
+  lesson <title> --problem <text> --resolution <text> [--tags <tags>]
+                                         Record a lesson learned (problem/resolution pair)
+                                         Shorthand: lesson "problem -> resolution"
   search <query>                         Search across all context files
   pin <path>                             Move file to system/ (always in context)
   unpin <path>                           Move file out of system/
@@ -74,6 +77,8 @@ EXAMPLES
   agent-mem remember --decision "chose Qdrant over Pinecone"
   agent-mem remember --pattern "always check Grafana before fixing"
   agent-mem remember --mistake "never force-push fix branches"
+  agent-mem lesson "API 429 -> implement exponential backoff"
+  agent-mem lesson "OOM fix" --problem "Memory leak after 1hr" --resolution "Close DB connections"
   agent-mem search "authentication"
   agent-mem reflect
   agent-mem reflect save --content "## Patterns Identified..."
