@@ -15,7 +15,8 @@ CORE
   status                                 Quick status overview
 
 MEMORY
-  remember <text>                        Quick-add to memory
+  remember [--decision|--pattern|--mistake|--note] <text>
+                                         Add to memory (structured categories)
   search <query>                         Search across all context files
   pin <path>                             Move file to system/ (always in context)
   unpin <path>                           Move file out of system/
@@ -39,7 +40,9 @@ EXAMPLES
   agent-context snapshot
   agent-context commit "implemented auth flow"
   agent-context branch try-qdrant "evaluate vector search"
-  agent-context remember "always check Grafana before fixing bugs"
+  agent-context remember --decision "chose Qdrant over Pinecone"
+  agent-context remember --pattern "always check Grafana before fixing"
+  agent-context remember --mistake "never force-push fix branches"
   agent-context search "authentication"
 
 MORE INFO

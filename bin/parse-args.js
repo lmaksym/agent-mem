@@ -30,13 +30,23 @@ export function parseArgs(argv) {
       if (eqIdx !== -1) {
         flags[key.slice(0, eqIdx)] = key.slice(eqIdx + 1);
       } else {
-        // Check if next arg is a value
-        const next = argv[i + 1];
-        if (next && !next.startsWith("-")) {
-          flags[key] = next;
-          i++;
-        } else {
+        // Boolean-only flags (never consume next arg as value)
+        const BOOLEAN_FLAGS = new Set([
+          "help", "h", "verbose", "force", "deep", "compare", "landscape",
+          "from-claude", "from-codex", "json", "no-fetch",
+          "decision", "pattern", "mistake", "note",
+        ]);
+        if (BOOLEAN_FLAGS.has(key)) {
           flags[key] = true;
+        } else {
+          // Check if next arg is a value
+          const next = argv[i + 1];
+          if (next && !next.startsWith("-")) {
+            flags[key] = next;
+            i++;
+          } else {
+            flags[key] = true;
+          }
         }
       }
     } else if (arg.startsWith("-") && arg.length === 2) {
