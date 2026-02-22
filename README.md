@@ -10,7 +10,7 @@ AI coding agents lose context between sessions. `CLAUDE.md` is manual. Memory fi
 
 **agent-mem** gives agents a structured, versioned context filesystem they can read and write through bash. It works with Claude Code, Codex, Cursor, Windsurf, Gemini CLI — any agent that can run shell commands.
 
-On `init`, the [Agent Skills](https://agentskills.io) skill is automatically installed to the 3 universal directories that cover ~14 tools: `.claude/skills/`, `.agents/skills/`, `.github/skills/`.
+On `init`, the [Agent Skills](https://agentskills.io) skill is automatically installed to the 3 universal directories that cover ~14 tools: `.claude/skills/`, `.agents/skills/`, `.github/skills/`. It also auto-syncs trigger-based instructions to any detected IDE rule files (CLAUDE.md, GEMINI.md, AGENTS.md, `.cursor/rules/`, `.windsurfrules`).
 
 ## Install
 
@@ -95,7 +95,7 @@ agent-mem snapshot
 ### Core
 
 ```bash
-agent-mem init [--from-claude]    # Bootstrap .context/ from codebase
+agent-mem init [--from-claude]    # Bootstrap .context/ + auto-sync IDE rules
 agent-mem snapshot                # Context tree with pinned content
 agent-mem read <path>             # Read a specific context file
 agent-mem write <path> --content "text"  # Write a context file (also reads stdin)
@@ -155,7 +155,7 @@ agent-mem reflect defrag          # Analyze memory health
 agent-mem sync                    # Export to IDE rule files (auto-detect)
 agent-mem sync --claude           # Export to CLAUDE.md
 agent-mem sync --codex            # Export to AGENTS.md
-agent-mem sync --cursor           # Export to .cursorrules
+agent-mem sync --cursor           # Export to .cursor/rules/
 agent-mem sync --windsurf         # Export to .windsurfrules
 agent-mem sync --gemini           # Export to GEMINI.md
 agent-mem sync --all              # Export to all formats
