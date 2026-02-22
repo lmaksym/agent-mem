@@ -2,30 +2,31 @@
 
 ## Spawn Template
 
-Include this block in every `sessions_spawn` task description for long-running work:
+Embed actx calls AS workflow steps (not a separate block). Agents skip separate instruction blocks but follow numbered steps.
 
 ```
-CONTEXT MANAGEMENT (agent-context):
 ACTX=/home/node/.openclaw/workspace/agent-context/bin/agent-context.js
 
-1. Start: $ACTX snapshot (understand current state)
-2. After EACH completed item: $ACTX remember --note "<finding>"
-3. Every 3-5 items: $ACTX commit "checkpoint: <summary>"
-4. On completion: $ACTX commit "done: <final summary>"
+STEP 1: Run $ACTX snapshot — read the output, this is your starting context.
+STEP 2: [First item of actual work]. Then run: $ACTX remember --note "<what you found>"
+STEP 3: [Next item]. Then run: $ACTX remember --note "<what you found>"
+...continue pattern: do work → save finding...
+STEP N (every 3 items): Run $ACTX commit "checkpoint: items 1-3 done"
+FINAL STEP: Write output file, then run $ACTX commit "done: <summary>"
 ```
+
+**Key principle:** Interleave actx into the task flow. Make `remember` the step right after each research item, not a separate section the agent can skip.
 
 ## Retry/Resume Template
 
 For sub-agents retrying a timed-out task:
 
 ```
-CONTEXT RECOVERY (agent-context):
 ACTX=/home/node/.openclaw/workspace/agent-context/bin/agent-context.js
 
-1. $ACTX snapshot (see what previous run saved)
-2. $ACTX read memory/notes.md (see completed items)
-3. Skip already-completed items
-4. Continue from last checkpoint
+STEP 1: Run $ACTX snapshot — review what the previous run saved.
+STEP 2: Run $ACTX read memory/notes.md — these are completed items, skip them.
+STEP 3: Continue from the first item NOT in notes.md.
 ```
 
 ## Splitting Large Tasks
