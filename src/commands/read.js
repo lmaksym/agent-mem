@@ -36,5 +36,25 @@ export default async function read({ args, flags }) {
     process.exit(1);
   }
 
+  // --last N: show only the last N entries (lines matching ^- [)
+  const last = parseInt(flags.last, 10);
+  if (last > 0) {
+    const lines = content.split("\n");
+    const entryIndices = [];
+    for (let i = 0; i < lines.length; i++) {
+      if (/^- \[/.test(lines[i])) entryIndices.push(i);
+    }
+    if (entryIndices.length > last) {
+      const cutoff = entryIndices[entryIndices.length - last];
+      // Keep header (everything before first entry) + last N entries
+      const headerEnd = entryIndices[0];
+      const header = lines.slice(0, headerEnd).join("\n");
+      const entries = lines.slice(cutoff).join("\n");
+      const skipped = entryIndices.length - last;
+      console.log(header + `(${skipped} older entries hidden — showing last ${last})\n\n` + entries);
+      return;
+    }
+  }
+
   console.log(content);
 }
