@@ -1,0 +1,37 @@
+{
+  "name": "agent-context",
+  "version": "0.1.0",
+  "description": "Context management CLI for AI coding agents. Like agent-browser, but for memory.",
+  "type": "module",
+  "bin": {
+    "agent-context": "./bin/agent-context.js",
+    "actx": "./bin/agent-context.js"
+  },
+  "scripts": {
+    "start": "node bin/agent-context.js",
+    "test": "node --test src/**/*.test.js",
+    "lint": "echo 'no lint configured yet'"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "context",
+    "memory",
+    "cli",
+    "claude-code",
+    "codex",
+    "cursor",
+    "coding-agent"
+  ],
+  "author": "Maksym Lypivskyi",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "LICENSE",
+    "README.md"
+  ]
+}
