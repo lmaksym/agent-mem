@@ -11,6 +11,9 @@ const DEFAULT_CONFIG = {
     defrag_size_kb: 10,
     stale_days: 30,
   },
+  compact: {
+    retain_days: 7,
+  },
   system_files_max: 10,
   memory_files_max: 25,
   branch: "main",

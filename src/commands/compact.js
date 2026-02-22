@@ -1,7 +1,7 @@
-import { existsSync, readdirSync, statSync, mkdirSync, renameSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { existsSync, readdirSync, statSync, unlinkSync } from "node:fs";
+import { join } from "node:path";
 import { contextDir as getContextDir } from "../core/context-root.js";
-import { readContextFile, writeContextFile, listFiles, buildTree } from "../core/fs.js";
+import { readContextFile, writeContextFile, listFiles } from "../core/fs.js";
 import { commitContext, hasChanges } from "../core/git.js";
 import { readConfig } from "../core/config.js";
 
@@ -173,12 +173,10 @@ export default async function compact({ args, flags }) {
         const content = readContextFile(ctxDir, relPath);
         const archivePath = `archive/compact-${new Date().toISOString().slice(0, 10)}/${relPath}`;
         writeContextFile(ctxDir, archivePath, content);
-        // Remove from reflections by overwriting with empty (or delete)
+        // Remove original after archiving
         const fullPath = join(ctxDir, relPath);
         if (existsSync(fullPath)) {
-          const archiveFullPath = join(ctxDir, archivePath);
-          // Already written to archive above, now remove original
-          renameSync(fullPath, archiveFullPath);
+          unlinkSync(fullPath);
         }
       }
     }
