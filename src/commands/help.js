@@ -27,6 +27,11 @@ BRANCHES
   merge <name> [summary]                 Merge branch back to main
   branches                               List all branches
 
+COMPACTION
+  compact                                Archive stale context, keep pins + recent
+  compact --dry-run                      Preview what would be archived
+  compact --hard                         Pins only, archive everything else
+
 REFLECTION
   reflect                                Gather reflection input (default: gather)
   reflect gather [--since <ref>] [--deep] [--compaction]
@@ -68,6 +73,9 @@ EXAMPLES
   agent-context reflect save --content "## Patterns Identified..."
   agent-context reflect history
   agent-context reflect defrag --dry-run
+  agent-context compact --dry-run         # preview compaction
+  agent-context compact                  # archive stale, keep recent + pins
+  agent-context compact --hard           # nuclear: pins only
   agent-context sync                     # auto-detect IDE files
   agent-context sync --claude            # export to CLAUDE.md
   agent-context sync --all               # export to all IDE formats
