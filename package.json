@@ -10,7 +10,12 @@
   "scripts": {
     "start": "node bin/agent-context.js",
     "test": "node --test src/**/*.test.js",
-    "lint": "echo 'no lint configured yet'"
+    "format": "prettier --write 'src/**/*.js' 'bin/**/*.js'",
+    "format:check": "prettier --check 'src/**/*.js' 'bin/**/*.js'",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.js": "prettier --write"
   },
   "keywords": [
     "ai",
@@ -43,5 +48,10 @@
     ".claude/",
     "LICENSE",
     "README.md"
-  ]
+  ],
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.8.1"
+  }
 }
