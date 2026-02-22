@@ -52,7 +52,7 @@ export default async function diff({ args, flags }) {
 
   const branchName = args[0];
   if (!branchName) {
-    console.error("❌ Usage: agent-context diff <branch>");
+    console.error("❌ Usage: agent-mem diff <branch>");
     console.error("Compare a branch's context with main.");
     process.exit(1);
   }

@@ -6,8 +6,8 @@ export default async function write({ args, flags }) {
   const ctxDir = getContextDir(root);
 
   if (!args.length) {
-    console.error("❌ Usage: agent-context write <path> --content <text>");
-    console.error("  Or pipe: echo 'content' | agent-context write <path>");
+    console.error("❌ Usage: agent-mem write <path> --content <text>");
+    console.error("  Or pipe: echo 'content' | agent-mem write <path>");
     process.exit(1);
   }
 

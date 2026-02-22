@@ -15,7 +15,7 @@ describe("forget", () => {
   let dir;
 
   before(() => {
-    dir = mkdtempSync(join(tmpdir(), "actx-forget-"));
+    dir = mkdtempSync(join(tmpdir(), "amem-forget-"));
     execSync("git init", { cwd: dir, stdio: "ignore" });
     execSync('git config user.name "test"', { cwd: dir, stdio: "ignore" });
     execSync('git config user.email "test@test.com"', { cwd: dir, stdio: "ignore" });

@@ -9,7 +9,7 @@ export default async function merge({ args, flags }) {
   const ctxDir = getContextDir(root);
 
   if (!args.length) {
-    console.error("❌ Usage: agent-context merge <branch-name> [summary]");
+    console.error("❌ Usage: agent-mem merge <branch-name> [summary]");
     process.exit(1);
   }
 

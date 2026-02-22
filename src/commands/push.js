@@ -4,15 +4,15 @@ import { git, isGitRepo, hasChanges, commitContext } from "../core/git.js";
 /**
  * Push .context/ to its own remote repository.
  * 
- * agent-context push                     — push to configured remote
- * agent-context push --remote <url>      — set remote and push
+ * agent-mem push                     — push to configured remote
+ * agent-mem push --remote <url>      — set remote and push
  */
 export default async function push({ args, flags }) {
   const root = flags._contextRoot;
   const ctxDir = getContextDir(root);
 
   if (!isGitRepo(ctxDir)) {
-    console.error("❌ .context/ is not a git repo. Run 'agent-context init' first.");
+    console.error("❌ .context/ is not a git repo. Run 'agent-mem init' first.");
     process.exit(1);
   }
 
@@ -30,11 +30,11 @@ export default async function push({ args, flags }) {
   try {
     remoteUrl = git("remote get-url origin", ctxDir);
   } catch {
-    console.error("❌ No remote configured. Use: agent-context push --remote <git-url>");
+    console.error("❌ No remote configured. Use: agent-mem push --remote <git-url>");
     console.error("");
     console.error("Example:");
-    console.error("  agent-context push --remote git@github.com:user/myproject-context.git");
-    console.error("  agent-context push --remote https://github.com/user/myproject-context.git");
+    console.error("  agent-mem push --remote git@github.com:user/myproject-context.git");
+    console.error("  agent-mem push --remote https://github.com/user/myproject-context.git");
     process.exit(1);
   }
 
@@ -65,7 +65,7 @@ export default async function push({ args, flags }) {
     console.log(`  ⬆️  Pushing to ${remoteUrl}...`);
     git(`push -u origin ${branch}`, ctxDir);
     console.log(`\n✅ PUSHED: .context/ → ${remoteUrl}`);
-    console.log(`Other machines can now: agent-context pull`);
+    console.log(`Other machines can now: agent-mem pull`);
   } catch (err) {
     // First push might need --set-upstream or force
     try {
@@ -73,7 +73,7 @@ export default async function push({ args, flags }) {
       console.log(`\n✅ PUSHED: .context/ → ${remoteUrl}`);
     } catch (err2) {
       console.error(`❌ Push failed: ${err2.message}`);
-      console.error("Try: agent-context push --remote <url> (to reconfigure)");
+      console.error("Try: agent-mem push --remote <url> (to reconfigure)");
       process.exit(1);
     }
   }

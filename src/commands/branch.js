@@ -9,8 +9,8 @@ export default async function branch({ args, flags }) {
   const ctxDir = getContextDir(root);
 
   if (!args.length) {
-    console.error("❌ Usage: agent-context branch <name> [purpose]");
-    console.error('Example: agent-context branch try-qdrant "evaluate vector search"');
+    console.error("❌ Usage: agent-mem branch <name> [purpose]");
+    console.error('Example: agent-mem branch try-qdrant "evaluate vector search"');
     process.exit(1);
   }
 

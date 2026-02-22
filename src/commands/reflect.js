@@ -63,8 +63,8 @@ async function doSave(ctxDir, args, flags) {
   }
 
   if (!content) {
-    console.error('❌ Usage: actx reflect save --content "YOUR_REFLECTION"');
-    console.error("  Or pipe: echo 'reflection' | actx reflect save");
+    console.error('❌ Usage: amem reflect save --content "YOUR_REFLECTION"');
+    console.error("  Or pipe: echo 'reflection' | amem reflect save");
     process.exit(1);
   }
 
@@ -182,7 +182,7 @@ async function doHistory(ctxDir, flags) {
   const lastN = flags.last ? parseInt(flags.last, 10) : 5;
 
   if (reflections.length === 0) {
-    console.log("📋 No reflections yet. Run `actx reflect` to create your first.");
+    console.log("📋 No reflections yet. Run `amem reflect` to create your first.");
     return;
   }
 

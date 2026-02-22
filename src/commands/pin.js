@@ -8,8 +8,8 @@ export default async function pin({ args, flags }) {
   const ctxDir = getContextDir(root);
 
   if (!args.length) {
-    console.error("❌ Usage: agent-context pin <path>");
-    console.error("Example: agent-context pin memory/decisions.md");
+    console.error("❌ Usage: agent-mem pin <path>");
+    console.error("Example: agent-mem pin memory/decisions.md");
     console.error("Moves the file into system/ so it's always in agent context.");
     process.exit(1);
   }

@@ -307,7 +307,7 @@ export function gatherReflectionPrompt(ctxDir, flags) {
   lines.push("═══ INSTRUCTIONS ═══");
   lines.push("");
   lines.push("After reasoning, call:");
-  lines.push('  actx reflect save --content "YOUR_REFLECTION"');
+  lines.push('  amem reflect save --content "YOUR_REFLECTION"');
   lines.push("");
   lines.push("Use this format:");
   lines.push("");

@@ -18,7 +18,7 @@ Reflection synthesizes what you've learned across multiple commits into structur
 
 ```bash
 # Step 1: Gather context (CLI reads git history + memory state)
-actx reflect
+amem reflect
 
 # Step 2: Think about:
 #   - What patterns emerged?
@@ -26,7 +26,7 @@ actx reflect
 #   - What knowledge is missing? What's outdated?
 
 # Step 3: Save your reflection with structured output
-actx reflect save --content "## Patterns Identified
+amem reflect save --content "## Patterns Identified
 - WebSocket reconnection needs state validation
 
 ## Decisions Validated
@@ -65,19 +65,19 @@ Include these sections (omit empty ones):
 ### Reflection History
 
 ```bash
-actx reflect history          # See past reflections + recurring themes
-actx reflect history --last 3 # Last 3 only
+amem reflect history          # See past reflections + recurring themes
+amem reflect history --last 3 # Last 3 only
 ```
 
 ### Memory Defrag
 
 When memory files get large or stale:
 ```bash
-actx reflect defrag --dry-run  # Analyze memory health (read-only)
-actx reflect defrag            # Apply stale markers (non-destructive)
+amem reflect defrag --dry-run  # Analyze memory health (read-only)
+amem reflect defrag            # Apply stale markers (non-destructive)
 # Then clean up manually
-actx write memory/patterns.md "<cleaned content>"
-actx commit "defrag: consolidated patterns"
+amem write memory/patterns.md "<cleaned content>"
+amem commit "defrag: consolidated patterns"
 ```
 
 ## When to Compact
@@ -85,9 +85,9 @@ actx commit "defrag: consolidated patterns"
 Compact when your context is bloated and you want to continue with less noise.
 
 ```bash
-actx compact --dry-run   # Preview what would be archived
-actx compact             # Default: archive stale entries, keep pins + last 7 days
-actx compact --hard      # Keep only pinned files, archive everything else
+amem compact --dry-run   # Preview what would be archived
+amem compact             # Default: archive stale entries, keep pins + last 7 days
+amem compact --hard      # Keep only pinned files, archive everything else
 ```
 
 **Use compact when:**

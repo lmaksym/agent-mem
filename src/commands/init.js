@@ -128,14 +128,14 @@ ${installedSkills.length ? `\nSkill installed to:\n${installedSkills.map(s => ` 
 ${hash ? `\nGit commit: ${hash}` : ""}
 
 Next steps:
-  agent-context snapshot    — view your context
-  agent-context write system/conventions.md — add your coding rules
-  agent-context commit "added conventions"  — checkpoint
+  agent-mem snapshot    — view your context
+  agent-mem write system/conventions.md — add your coding rules
+  agent-mem commit "added conventions"  — checkpoint
 `.trim());
 }
 
 /**
- * Install the agent-context skill to the 3 universal Agent Skills directories.
+ * Install the agent-mem skill to the 3 universal Agent Skills directories.
  * These cover ~14 of the 16 tools that support the agentskills.io standard:
  *
  *   .claude/skills/   — Claude Code, Goose, Amp, OpenCode, Cline
@@ -143,13 +143,13 @@ Next steps:
  *   .github/skills/   — VS Code Copilot, GitHub Copilot
  */
 function installSkills(cwd) {
-  const sourceDir = join(PACKAGE_ROOT, ".claude", "skills", "agent-context");
+  const sourceDir = join(PACKAGE_ROOT, ".claude", "skills", "agent-mem");
   if (!existsSync(sourceDir)) return [];
 
   const targets = [
-    ".claude/skills/agent-context",
-    ".agents/skills/agent-context",
-    ".github/skills/agent-context",
+    ".claude/skills/agent-mem",
+    ".agents/skills/agent-mem",
+    ".github/skills/agent-mem",
   ];
 
   const installed = [];

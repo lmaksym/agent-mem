@@ -61,7 +61,7 @@ export function readConfig(contextDir) {
  * Write config to .context/config.yaml.
  */
 export function writeConfig(contextDir, config) {
-  const lines = ["# agent-context configuration"];
+  const lines = ["# agent-mem configuration"];
 
   for (const [key, val] of Object.entries(config)) {
     if (val && typeof val === "object" && !Array.isArray(val)) {

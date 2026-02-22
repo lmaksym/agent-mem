@@ -8,7 +8,7 @@ export default async function switchBranch({ args, flags }) {
   const ctxDir = getContextDir(root);
 
   if (!args.length) {
-    console.error("❌ Usage: agent-context switch <branch-name>");
+    console.error("❌ Usage: agent-mem switch <branch-name>");
     process.exit(1);
   }
 
@@ -17,7 +17,7 @@ export default async function switchBranch({ args, flags }) {
   if (name !== "main") {
     const branchDir = join(ctxDir, "branches", name);
     if (!existsSync(branchDir)) {
-      console.error(`❌ Branch "${name}" not found. Run 'agent-context branches' to see available.`);
+      console.error(`❌ Branch "${name}" not found. Run 'agent-mem branches' to see available.`);
       process.exit(1);
     }
   }

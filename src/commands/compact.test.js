@@ -15,7 +15,7 @@ describe("compact", () => {
   let dir;
 
   before(() => {
-    dir = mkdtempSync(join(tmpdir(), "actx-compact-"));
+    dir = mkdtempSync(join(tmpdir(), "amem-compact-"));
     execSync("git init", { cwd: dir, stdio: "ignore" });
     execSync('git config user.name "test"', { cwd: dir, stdio: "ignore" });
     execSync('git config user.email "test@test.com"', { cwd: dir, stdio: "ignore" });

@@ -7,8 +7,8 @@ import { git, isGitRepo } from "../core/git.js";
 /**
  * Pull .context/ from its remote repository.
  * 
- * agent-context pull                     — pull from configured remote
- * agent-context pull --remote <url>      — clone/pull from specific remote
+ * agent-mem pull                     — pull from configured remote
+ * agent-mem pull --remote <url>      — clone/pull from specific remote
  */
 export default async function pull({ args, flags }) {
   const root = flags._contextRoot || process.cwd();
@@ -19,7 +19,7 @@ export default async function pull({ args, flags }) {
     const remote = flags.remote || args[0];
     if (!remote) {
       console.error("❌ No .context/ found and no remote specified.");
-      console.error("Usage: agent-context pull --remote <git-url>");
+      console.error("Usage: agent-mem pull --remote <git-url>");
       process.exit(1);
     }
 
@@ -31,7 +31,7 @@ export default async function pull({ args, flags }) {
         stdio: ["pipe", "pipe", "pipe"],
       });
       console.log(`\n✅ PULLED: ${remote} → .context/`);
-      console.log("Run: agent-context snapshot");
+      console.log("Run: agent-mem snapshot");
     } catch (err) {
       console.error(`❌ Clone failed: ${err.stderr?.trim() || err.message}`);
       process.exit(1);
@@ -57,7 +57,7 @@ export default async function pull({ args, flags }) {
   try {
     remoteUrl = git("remote get-url origin", ctxDir);
   } catch {
-    console.error("❌ No remote configured. Use: agent-context pull --remote <git-url>");
+    console.error("❌ No remote configured. Use: agent-mem pull --remote <git-url>");
     process.exit(1);
   }
 
@@ -65,7 +65,7 @@ export default async function pull({ args, flags }) {
   try {
     git("pull --rebase origin main", ctxDir);
     console.log(`\n✅ PULLED: latest context from ${remoteUrl}`);
-    console.log("Run: agent-context snapshot");
+    console.log("Run: agent-mem snapshot");
   } catch (err) {
     // Try without rebase
     try {

@@ -6,13 +6,13 @@ import { initGit, commitContext } from "../core/git.js";
 /**
  * Import a shared context snapshot.
  * 
- * agent-context import <file>            — import from snapshot file
- * agent-context import --merge           — merge into existing context (default: overwrite)
+ * agent-mem import <file>            — import from snapshot file
+ * agent-mem import --merge           — merge into existing context (default: overwrite)
  */
 export default async function importCmd({ args, flags }) {
   if (!args.length) {
-    console.error("❌ Usage: agent-context import <snapshot-file>");
-    console.error("Example: agent-context import context-myproject-a1b2c3d4.json");
+    console.error("❌ Usage: agent-mem import <snapshot-file>");
+    console.error("Example: agent-mem import context-myproject-a1b2c3d4.json");
     process.exit(1);
   }
 
@@ -74,5 +74,5 @@ export default async function importCmd({ args, flags }) {
   console.log(`  Files written: ${written}${skipped ? ` | Skipped (existing): ${skipped}` : ""}`);
   console.log(`  Source: ${snapshot.commits || "?"} commits, created ${snapshot.createdAt?.slice(0, 10) || "?"}`);
   console.log("");
-  console.log("Run: agent-context snapshot");
+  console.log("Run: agent-mem snapshot");
 }

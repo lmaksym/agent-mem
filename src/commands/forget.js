@@ -21,12 +21,12 @@ export default async function forget({ args, flags }) {
   const ctxDir = getContextDir(root);
 
   if (!args.length) {
-    console.error("❌ Usage: agent-context forget <path>");
+    console.error("❌ Usage: agent-mem forget <path>");
     console.error("Remove a context file. Archived first for safety.");
     console.error("");
     console.error("Examples:");
-    console.error("  agent-context forget memory/notes.md");
-    console.error("  agent-context forget memory/old-patterns.md");
+    console.error("  agent-mem forget memory/notes.md");
+    console.error("  agent-mem forget memory/old-patterns.md");
     console.error("");
     console.error("Cannot forget pinned (system/) files — unpin first.");
     process.exit(1);
@@ -41,7 +41,7 @@ export default async function forget({ args, flags }) {
 
   // Safety: don't allow forgetting system files (normalized)
   if (relPath.startsWith("system/") || relPath === "system") {
-    console.error("❌ Cannot forget pinned files. Run 'agent-context unpin' first.");
+    console.error("❌ Cannot forget pinned files. Run 'agent-mem unpin' first.");
     process.exit(1);
   }
 
@@ -73,5 +73,5 @@ export default async function forget({ args, flags }) {
   console.log(`Archived: .context/${archivePath}`);
   if (hash) console.log(`Committed: ${hash}`);
   console.log("");
-  console.log("To restore: agent-context read " + archivePath);
+  console.log("To restore: agent-mem read " + archivePath);
 }

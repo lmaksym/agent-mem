@@ -26,7 +26,7 @@ export default async function remember({ args, flags }) {
   const ctxDir = getContextDir(root);
 
   if (!args.length) {
-    console.error("❌ Usage: agent-context remember [--category] <text>");
+    console.error("❌ Usage: agent-mem remember [--category] <text>");
     console.error("");
     console.error("Categories:");
     console.error('  --decision  "Chose Qdrant over Pinecone because self-hosted"');
@@ -53,7 +53,7 @@ export default async function remember({ args, flags }) {
   }
 
   if (!args.length) {
-    console.error(`❌ No text provided. Usage: agent-context remember --${category} "your text"`);
+    console.error(`❌ No text provided. Usage: agent-mem remember --${category} "your text"`);
     process.exit(1);
   }
 

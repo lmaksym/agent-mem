@@ -1,25 +1,25 @@
 #!/usr/bin/env node
 
 /**
- * agent-context — Context management CLI for AI coding agents
+ * agent-mem — Context management CLI for AI coding agents
  *
  * Usage:
- *   agent-context init          Bootstrap context from codebase
- *   agent-context snapshot      Get context tree (agent's primary view)
- *   agent-context read <path>   Read a specific context file
- *   agent-context write <path>  Write/update a context file
- *   agent-context commit [msg]  Checkpoint progress
- *   agent-context status        Quick status overview
- *   agent-context remember      Quick-add to memory
- *   agent-context search        Search across context
- *   agent-context branch        Create exploration branch
- *   agent-context switch        Switch active branch
- *   agent-context merge         Merge branch back
- *   agent-context branches      List branches
- *   agent-context pin           Move file to system/ (always loaded)
- *   agent-context unpin         Move file out of system/
- *   agent-context config        Show/set configuration
- *   agent-context help          Show help
+ *   agent-mem init          Bootstrap context from codebase
+ *   agent-mem snapshot      Get context tree (agent's primary view)
+ *   agent-mem read <path>   Read a specific context file
+ *   agent-mem write <path>  Write/update a context file
+ *   agent-mem commit [msg]  Checkpoint progress
+ *   agent-mem status        Quick status overview
+ *   agent-mem remember      Quick-add to memory
+ *   agent-mem search        Search across context
+ *   agent-mem branch        Create exploration branch
+ *   agent-mem switch        Switch active branch
+ *   agent-mem merge         Merge branch back
+ *   agent-mem branches      List branches
+ *   agent-mem pin           Move file to system/ (always loaded)
+ *   agent-mem unpin         Move file out of system/
+ *   agent-mem config        Show/set configuration
+ *   agent-mem help          Show help
  */
 
 import { resolve } from "node:path";
@@ -67,7 +67,7 @@ async function main() {
 
   if (!(command in COMMANDS)) {
     console.error(`❌ Unknown command: ${command}`);
-    console.error(`Run 'agent-context help' for available commands.`);
+    console.error(`Run 'agent-mem help' for available commands.`);
     process.exit(1);
   }
 
@@ -75,7 +75,7 @@ async function main() {
   if (!["init", "help", "pull", "import"].includes(command)) {
     const root = findContextRoot(process.cwd());
     if (!root) {
-      console.error(`❌ No .context/ found. Run 'agent-context init' first.`);
+      console.error(`❌ No .context/ found. Run 'agent-mem init' first.`);
       process.exit(1);
     }
     flags._contextRoot = root;

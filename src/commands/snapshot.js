@@ -58,7 +58,7 @@ export default async function snapshot({ args, flags }) {
   }
 
   if (branchMemPrefix && globalMemFiles.length) {
-    lines.push(`MEMORY [main] (${globalMemFiles.length} files — use 'actx read memory/<file>' for global):`);
+    lines.push(`MEMORY [main] (${globalMemFiles.length} files — use 'amem read memory/<file>' for global):`);
     for (const f of globalMemFiles) {
       lines.push(`  ${f.name} — ${f.description || "(no description)"}`);
     }

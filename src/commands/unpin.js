@@ -8,8 +8,8 @@ export default async function unpin({ args, flags }) {
   const ctxDir = getContextDir(root);
 
   if (!args.length) {
-    console.error("❌ Usage: agent-context unpin <path>");
-    console.error("Example: agent-context unpin system/old-conventions.md");
+    console.error("❌ Usage: agent-mem unpin <path>");
+    console.error("Example: agent-mem unpin system/old-conventions.md");
     process.exit(1);
   }
 

@@ -7,8 +7,8 @@ export default async function read({ args, flags }) {
   const ctxDir = getContextDir(root);
 
   if (!args.length) {
-    console.error("❌ Usage: agent-context read <path>");
-    console.error("Example: agent-context read memory/decisions.md");
+    console.error("❌ Usage: agent-mem read <path>");
+    console.error("Example: agent-mem read memory/decisions.md");
     process.exit(1);
   }
 

@@ -9,9 +9,9 @@ import { commitCount, lastCommit } from "../core/git.js";
 /**
  * Generate a portable context snapshot that can be shared with anyone.
  * 
- * agent-context share                    — generate snapshot file
- * agent-context share --output <path>    — custom output path
- * agent-context import <file-or-url>     — import a shared snapshot
+ * agent-mem share                    — generate snapshot file
+ * agent-mem share --output <path>    — custom output path
+ * agent-mem import <file-or-url>     — import a shared snapshot
  */
 export default async function share({ args, flags }) {
   const root = flags._contextRoot;
@@ -36,7 +36,7 @@ export default async function share({ args, flags }) {
 
   const snapshot = {
     version: 1,
-    tool: "agent-context",
+    tool: "agent-mem",
     project: projectName,
     branch: config.branch || "main",
     commits,
@@ -61,5 +61,5 @@ export default async function share({ args, flags }) {
   console.log(`  Path: ${outputPath}`);
   console.log("");
   console.log("To import on another machine:");
-  console.log(`  agent-context import ${filename}`);
+  console.log(`  agent-mem import ${filename}`);
 }

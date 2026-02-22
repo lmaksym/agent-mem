@@ -1,10 +1,10 @@
 export default async function help() {
   console.log(`
-agent-context — Context management CLI for AI coding agents
+agent-mem — Context management CLI for AI coding agents
 
 USAGE
-  agent-context <command> [args] [flags]
-  actx <command> [args] [flags]
+  agent-mem <command> [args] [flags]
+  amem <command> [args] [flags]
 
 CORE
   init [--from-claude] [--from-codex]   Bootstrap context from codebase
@@ -67,26 +67,26 @@ FLAGS
   --help, -h                             Show this help
 
 EXAMPLES
-  agent-context init
-  agent-context snapshot
-  agent-context commit "implemented auth flow"
-  agent-context branch try-qdrant "evaluate vector search"
-  agent-context remember --decision "chose Qdrant over Pinecone"
-  agent-context remember --pattern "always check Grafana before fixing"
-  agent-context remember --mistake "never force-push fix branches"
-  agent-context search "authentication"
-  agent-context reflect
-  agent-context reflect save --content "## Patterns Identified..."
-  agent-context reflect history
-  agent-context reflect defrag --dry-run
-  agent-context compact --dry-run         # preview compaction
-  agent-context compact                  # archive stale, keep recent + pins
-  agent-context compact --hard           # nuclear: pins only
-  agent-context sync                     # auto-detect IDE files
-  agent-context sync --claude            # export to CLAUDE.md
-  agent-context sync --all               # export to all IDE formats
+  agent-mem init
+  agent-mem snapshot
+  agent-mem commit "implemented auth flow"
+  agent-mem branch try-qdrant "evaluate vector search"
+  agent-mem remember --decision "chose Qdrant over Pinecone"
+  agent-mem remember --pattern "always check Grafana before fixing"
+  agent-mem remember --mistake "never force-push fix branches"
+  agent-mem search "authentication"
+  agent-mem reflect
+  agent-mem reflect save --content "## Patterns Identified..."
+  agent-mem reflect history
+  agent-mem reflect defrag --dry-run
+  agent-mem compact --dry-run         # preview compaction
+  agent-mem compact                  # archive stale, keep recent + pins
+  agent-mem compact --hard           # nuclear: pins only
+  agent-mem sync                     # auto-detect IDE files
+  agent-mem sync --claude            # export to CLAUDE.md
+  agent-mem sync --all               # export to all IDE formats
 
 MORE INFO
-  https://github.com/lmaksym/agent-context
+  https://github.com/lmaksym/agent-mem
 `.trim());
 }

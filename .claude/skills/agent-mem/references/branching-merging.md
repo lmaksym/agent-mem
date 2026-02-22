@@ -4,16 +4,16 @@
 
 Compare a branch's context against main before merging:
 ```bash
-actx diff try-qdrant              # summary view
-actx diff try-qdrant --verbose    # show actual line changes
+amem diff try-qdrant              # summary view
+amem diff try-qdrant --verbose    # show actual line changes
 ```
 
 ## Resolve — auto-resolve merge conflicts
 
 After git operations that create merge conflicts in `.context/`:
 ```bash
-actx resolve --dry-run   # Preview resolution strategy per file
-actx resolve             # Auto-resolve all conflicts
+amem resolve --dry-run   # Preview resolution strategy per file
+amem resolve             # Auto-resolve all conflicts
 ```
 
 **Resolution strategies (automatic):**
@@ -25,10 +25,10 @@ actx resolve             # Auto-resolve all conflicts
 
 Remove obsolete memory files (archived first for safety):
 ```bash
-actx forget memory/old-notes.md
+amem forget memory/old-notes.md
 ```
 
 **Safety rules:**
-- Cannot forget pinned `system/` files — run `actx unpin` first
+- Cannot forget pinned `system/` files — run `amem unpin` first
 - Cannot forget `config.yaml`
 - Always archives to `archive/forgotten-YYYY-MM-DD/` before deleting

@@ -1,11 +1,11 @@
 {
-  "name": "agent-context",
+  "name": "agent-mem",
   "version": "0.1.0",
-  "description": "Context management CLI for AI coding agents. Like agent-browser, but for memory.",
+  "description": "Persistent, git-backed memory for AI coding agents.",
   "type": "module",
   "bin": {
-    "agent-context": "./bin/agent-context.js",
-    "actx": "./bin/agent-context.js"
+    "agent-mem": "./bin/agent-context.js",
+    "amem": "./bin/agent-context.js"
   },
   "scripts": {
     "start": "node bin/agent-context.js",
@@ -21,7 +21,8 @@
     "claude-code",
     "codex",
     "cursor",
-    "coding-agent"
+    "coding-agent",
+    "agent-skills"
   ],
   "author": "Maksym Lypivskyi",
   "license": "MIT",

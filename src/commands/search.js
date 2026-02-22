@@ -7,7 +7,7 @@ export default async function search({ args, flags }) {
   const ctxDir = getContextDir(root);
 
   if (!args.length) {
-    console.error("❌ Usage: agent-context search <query>");
+    console.error("❌ Usage: agent-mem search <query>");
     process.exit(1);
   }
 

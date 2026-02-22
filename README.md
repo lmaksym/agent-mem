@@ -1,28 +1,28 @@
-# agent-context
+# agent-mem
 
 > 🚧 **Alpha** — functional but evolving. Feedback welcome.
 
-Context management CLI for AI coding agents. Like [agent-browser](https://github.com/vercel-labs/agent-browser), but for memory.
+Persistent, git-backed memory for AI coding agents. Like [agent-browser](https://github.com/vercel-labs/agent-browser), but for memory.
 
 ## The Problem
 
 AI coding agents lose context between sessions. `CLAUDE.md` is manual. Memory files get stale. When you start a new session, you "re-teach" the agent everything — project conventions, past decisions, what you tried and why.
 
-**agent-context** gives agents a structured, versioned context filesystem they can read and write through bash. It works with Claude Code, Codex, Cursor, Windsurf, Gemini CLI — any agent that can run shell commands.
+**agent-mem** gives agents a structured, versioned context filesystem they can read and write through bash. It works with Claude Code, Codex, Cursor, Windsurf, Gemini CLI — any agent that can run shell commands.
 
 On `init`, the [Agent Skills](https://agentskills.io) skill is automatically installed to the 3 universal directories that cover ~14 tools: `.claude/skills/`, `.agents/skills/`, `.github/skills/`.
 
 ## Install
 
 ```bash
-npm install -g agent-context
+npm install -g agent-mem
 ```
 
 ## Quick Start
 
 ```bash
-agent-context init        # Bootstrap from codebase
-agent-context snapshot    # Agent's primary view
+agent-mem init        # Bootstrap from codebase
+agent-mem snapshot    # Agent's primary view
 ```
 
 ### What `snapshot` returns:
@@ -59,32 +59,32 @@ BRANCHES (1):
 CONFIG: auto_commit=false | reflection=manual
 ```
 
-The agent sees the full tree. Pinned files are loaded. Everything else is a summary — drill down with `agent-context read <path>`.
+The agent sees the full tree. Pinned files are loaded. Everything else is a summary — drill down with `agent-mem read <path>`.
 
 ## How Agents Use It
 
 ```bash
 # 1. Start session — understand current state
-agent-context snapshot
-agent-context read memory/decisions.md
+agent-mem snapshot
+agent-mem read memory/decisions.md
 
 # 2. Do work...
 
 # 3. Record what you learned
-agent-context remember --decision "Chose PKCE over implicit grant for mobile OAuth"
-agent-context remember --pattern "Always validate WebSocket reconnection with heartbeat"
-agent-context remember --mistake "Don't use dynamic imports for server components"
+agent-mem remember --decision "Chose PKCE over implicit grant for mobile OAuth"
+agent-mem remember --pattern "Always validate WebSocket reconnection with heartbeat"
+agent-mem remember --mistake "Don't use dynamic imports for server components"
 
 # 4. Checkpoint progress
-agent-context commit "implemented OAuth PKCE flow"
+agent-mem commit "implemented OAuth PKCE flow"
 
 # 5. Explore something uncertain
-agent-context branch try-qdrant "evaluate Qdrant vs Pinecone"
+agent-mem branch try-qdrant "evaluate Qdrant vs Pinecone"
 # ... experiment ...
-agent-context merge try-qdrant "Qdrant wins — self-hosted, better filtering"
+agent-mem merge try-qdrant "Qdrant wins — self-hosted, better filtering"
 
 # 6. Next session — everything is still there
-agent-context snapshot
+agent-mem snapshot
 ```
 
 ## Commands
@@ -92,12 +92,12 @@ agent-context snapshot
 ### Core
 
 ```bash
-agent-context init [--from-claude]    # Bootstrap .context/ from codebase
-agent-context snapshot                # Context tree with pinned content
-agent-context read <path>             # Read a specific context file
-agent-context write <path> --content "text"  # Write a context file (also reads stdin)
-agent-context commit [message]        # Git-backed checkpoint
-agent-context status                  # Quick status overview
+agent-mem init [--from-claude]    # Bootstrap .context/ from codebase
+agent-mem snapshot                # Context tree with pinned content
+agent-mem read <path>             # Read a specific context file
+agent-mem write <path> --content "text"  # Write a context file (also reads stdin)
+agent-mem commit [message]        # Git-backed checkpoint
+agent-mem status                  # Quick status overview
 ```
 
 `--from-claude` imports your existing `CLAUDE.md` into `.context/memory/imported-claude-md.md` so past conventions are preserved.
@@ -105,72 +105,72 @@ agent-context status                  # Quick status overview
 ### Memory
 
 ```bash
-agent-context remember --decision "chose X because Y"   # → memory/decisions.md
-agent-context remember --pattern "always do X before Y"  # → memory/patterns.md
-agent-context remember --mistake "never do X"            # → memory/mistakes.md
-agent-context remember --note "general observation"      # → memory/notes.md
-agent-context search <query>          # Grep across all context files
-agent-context pin <path>              # Move to system/ (always in context)
-agent-context unpin <path>            # Move out of system/
+agent-mem remember --decision "chose X because Y"   # → memory/decisions.md
+agent-mem remember --pattern "always do X before Y"  # → memory/patterns.md
+agent-mem remember --mistake "never do X"            # → memory/mistakes.md
+agent-mem remember --note "general observation"      # → memory/notes.md
+agent-mem search <query>          # Grep across all context files
+agent-mem pin <path>              # Move to system/ (always in context)
+agent-mem unpin <path>            # Move out of system/
 ```
 
 ### Branches
 
 ```bash
-agent-context branch <name> [purpose] # Create exploration branch
-agent-context switch <name>           # Switch active branch
-agent-context merge <name> [summary]  # Merge findings back to main
-agent-context branches                # List all branches
+agent-mem branch <name> [purpose] # Create exploration branch
+agent-mem switch <name>           # Switch active branch
+agent-mem merge <name> [summary]  # Merge findings back to main
+agent-mem branches                # List all branches
 ```
 
 ### Compaction & Maintenance
 
 ```bash
-agent-context compact                 # Archive stale, keep pins + recent
-agent-context compact --dry-run       # Preview what would be archived
-agent-context compact --hard          # Pins only, archive everything else
-agent-context forget <path>           # Remove memory file (archived first)
-agent-context resolve                 # Auto-resolve .context/ merge conflicts
-agent-context resolve --dry-run       # Preview resolution strategy
-agent-context diff <branch>           # Compare branch context with main
+agent-mem compact                 # Archive stale, keep pins + recent
+agent-mem compact --dry-run       # Preview what would be archived
+agent-mem compact --hard          # Pins only, archive everything else
+agent-mem forget <path>           # Remove memory file (archived first)
+agent-mem resolve                 # Auto-resolve .context/ merge conflicts
+agent-mem resolve --dry-run       # Preview resolution strategy
+agent-mem diff <branch>           # Compare branch context with main
 ```
 
 ### Reflection
 
 ```bash
-agent-context reflect                 # Gather reflection input
-agent-context reflect save --content "..."  # Save structured reflection
-agent-context reflect history         # Past reflections + themes
-agent-context reflect defrag          # Analyze memory health
+agent-mem reflect                 # Gather reflection input
+agent-mem reflect save --content "..."  # Save structured reflection
+agent-mem reflect history         # Past reflections + themes
+agent-mem reflect defrag          # Analyze memory health
 ```
 
 ### Sync & Sharing
 
 ```bash
-agent-context sync                    # Export to IDE rule files (auto-detect)
-agent-context sync --claude           # Export to CLAUDE.md
-agent-context sync --codex            # Export to AGENTS.md
-agent-context sync --cursor           # Export to .cursorrules
-agent-context sync --windsurf         # Export to .windsurfrules
-agent-context sync --gemini           # Export to GEMINI.md
-agent-context sync --all              # Export to all formats
-agent-context track                   # Toggle .context/ in project git
-agent-context push                    # Push .context/ to remote
-agent-context pull                    # Pull .context/ from remote
-agent-context share                   # Generate portable snapshot
-agent-context import <file>           # Import shared snapshot
+agent-mem sync                    # Export to IDE rule files (auto-detect)
+agent-mem sync --claude           # Export to CLAUDE.md
+agent-mem sync --codex            # Export to AGENTS.md
+agent-mem sync --cursor           # Export to .cursorrules
+agent-mem sync --windsurf         # Export to .windsurfrules
+agent-mem sync --gemini           # Export to GEMINI.md
+agent-mem sync --all              # Export to all formats
+agent-mem track                   # Toggle .context/ in project git
+agent-mem push                    # Push .context/ to remote
+agent-mem pull                    # Pull .context/ from remote
+agent-mem share                   # Generate portable snapshot
+agent-mem import <file>           # Import shared snapshot
 ```
 
 ### Config
 
 ```bash
-agent-context config                  # Show current config
-agent-context config set <key> <val>  # Update config
+agent-mem config                  # Show current config
+agent-mem config set <key> <val>  # Update config
 ```
 
 ## Directory Structure
 
-`agent-context init` creates a `.context/` directory in your project:
+`agent-mem init` creates a `.context/` directory in your project:
 
 ```
 .context/
@@ -208,8 +208,8 @@ Every change is git-versioned inside `.context/`. Human-readable markdown, diffa
 ## Aliases
 
 ```bash
-agent-context snapshot
-actx snapshot             # short alias
+agent-mem snapshot
+amem snapshot             # short alias
 ```
 
 ## Inspired By

@@ -226,11 +226,11 @@ export function formatDefragOutput(analysis, isDryRun) {
   // Instructions
   lines.push("═══ INSTRUCTIONS ═══");
   lines.push("To act on suggestions:");
-  lines.push('  actx write memory/<file>.md "<cleaned content>"');
-  lines.push('  actx commit "defrag: reorganized memory files"');
+  lines.push('  amem write memory/<file>.md "<cleaned content>"');
+  lines.push('  amem commit "defrag: reorganized memory files"');
   lines.push("");
   lines.push("Or run a full reflect cycle to address holistically:");
-  lines.push("  actx reflect gather --deep");
+  lines.push("  amem reflect gather --deep");
 
   return lines.join("\n");
 }

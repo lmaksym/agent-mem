@@ -19,7 +19,7 @@ describe("resolve", () => {
   let dir;
 
   before(() => {
-    dir = mkdtempSync(join(tmpdir(), "actx-resolve-"));
+    dir = mkdtempSync(join(tmpdir(), "amem-resolve-"));
     execSync("git init", { cwd: dir, stdio: "ignore" });
     execSync('git config user.name "test"', { cwd: dir, stdio: "ignore" });
     execSync('git config user.email "test@test.com"', { cwd: dir, stdio: "ignore" });

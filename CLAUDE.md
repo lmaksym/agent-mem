@@ -4,14 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-agent-context is a zero-dependency CLI tool (`actx`) that gives AI coding agents persistent, git-backed memory across sessions. It manages a `.context/` directory with structured markdown files, versioned via an internal git repo.
+agent-mem is a zero-dependency CLI tool (`amem`) that gives AI coding agents persistent, git-backed memory across sessions. It manages a `.context/` directory with structured markdown files, versioned via an internal git repo.
 
 ## Commands
 
 ```bash
 npm test              # Run all tests (Node.js built-in test runner)
 npm start             # Run CLI
-node bin/agent-context.js <command>  # Run specific command
+node bin/agent-mem.js <command>  # Run specific command
 ```
 
 Run a single test file:
@@ -25,7 +25,7 @@ No linter is configured yet.
 
 ### CLI Entry Point
 
-`bin/agent-context.js` — Dynamic command dispatcher that lazy-loads commands via `import()`. All 30+ commands live in `src/commands/` and follow the signature:
+`bin/agent-mem.js` — Dynamic command dispatcher that lazy-loads commands via `import()`. All 30+ commands live in `src/commands/` and follow the signature:
 
 ```javascript
 export default async function commandName({ args, flags }) { ... }

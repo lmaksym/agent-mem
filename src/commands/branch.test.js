@@ -13,7 +13,7 @@ describe("branch / switch / merge / branches", () => {
   let dir;
 
   before(() => {
-    dir = mkdtempSync(join(tmpdir(), "actx-test-branch-"));
+    dir = mkdtempSync(join(tmpdir(), "amem-test-branch-"));
     writeFileSync(join(dir, "package.json"), "{}");
     run("init", dir);
   });
@@ -67,7 +67,7 @@ describe("pin / unpin", () => {
   let dir;
 
   before(() => {
-    dir = mkdtempSync(join(tmpdir(), "actx-test-pin-"));
+    dir = mkdtempSync(join(tmpdir(), "amem-test-pin-"));
     writeFileSync(join(dir, "package.json"), "{}");
     run("init", dir);
     run('remember --decision "test decision"', dir);

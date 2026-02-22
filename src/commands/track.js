@@ -5,9 +5,9 @@ import { contextDir as getContextDir } from "../core/context-root.js";
 /**
  * Toggle whether .context/ is tracked in the project's git repo.
  * 
- * agent-context track          — show current status
- * agent-context track --enable — add .context/ to project git
- * agent-context track --disable — add .context/ to .gitignore
+ * agent-mem track          — show current status
+ * agent-mem track --enable — add .context/ to project git
+ * agent-mem track --disable — add .context/ to .gitignore
  */
 export default async function track({ args, flags }) {
   const root = flags._contextRoot;
@@ -39,10 +39,10 @@ export default async function track({ args, flags }) {
     }
 
     // Add .context/ to .gitignore
-    const newContent = gitignoreContent.trimEnd() + "\n\n# agent-context (local only)\n.context/\n";
+    const newContent = gitignoreContent.trimEnd() + "\n\n# agent-mem (local only)\n.context/\n";
     writeFileSync(gitignorePath, newContent);
     console.log("✅ UNTRACKED: .context/ added to .gitignore");
-    console.log("Context stays local — use 'agent-context push' to sync across machines.");
+    console.log("Context stays local — use 'agent-mem push' to sync across machines.");
     return;
   }
 
@@ -50,6 +50,6 @@ export default async function track({ args, flags }) {
   console.log(`📊 TRACKING STATUS:`);
   console.log(`  .context/ is ${isIgnored ? "IGNORED (local only)" : "TRACKED (committed with project)"}`);
   console.log("");
-  console.log("  agent-context track --enable   — commit context with project");
-  console.log("  agent-context track --disable  — keep context local only");
+  console.log("  agent-mem track --enable   — commit context with project");
+  console.log("  agent-mem track --disable  — keep context local only");
 }

@@ -15,7 +15,7 @@ describe("diff", () => {
   let dir;
 
   before(() => {
-    dir = mkdtempSync(join(tmpdir(), "actx-diff-"));
+    dir = mkdtempSync(join(tmpdir(), "amem-diff-"));
     execSync("git init", { cwd: dir, stdio: "ignore" });
     execSync('git config user.name "test"', { cwd: dir, stdio: "ignore" });
     execSync('git config user.email "test@test.com"', { cwd: dir, stdio: "ignore" });

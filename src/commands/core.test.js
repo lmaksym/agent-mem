@@ -13,7 +13,7 @@ describe("snapshot", () => {
   let dir;
 
   before(() => {
-    dir = mkdtempSync(join(tmpdir(), "actx-test-snap-"));
+    dir = mkdtempSync(join(tmpdir(), "amem-test-snap-"));
     writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "snap-test", dependencies: { express: "4" } }));
     run("init", dir);
   });
@@ -36,7 +36,7 @@ describe("read / write", () => {
   let dir;
 
   before(() => {
-    dir = mkdtempSync(join(tmpdir(), "actx-test-rw-"));
+    dir = mkdtempSync(join(tmpdir(), "amem-test-rw-"));
     writeFileSync(join(dir, "package.json"), "{}");
     run("init", dir);
   });
@@ -63,7 +63,7 @@ describe("commit", () => {
   let dir;
 
   before(() => {
-    dir = mkdtempSync(join(tmpdir(), "actx-test-commit-"));
+    dir = mkdtempSync(join(tmpdir(), "amem-test-commit-"));
     writeFileSync(join(dir, "package.json"), "{}");
     run("init", dir);
   });
@@ -87,7 +87,7 @@ describe("status", () => {
   let dir;
 
   before(() => {
-    dir = mkdtempSync(join(tmpdir(), "actx-test-status-"));
+    dir = mkdtempSync(join(tmpdir(), "amem-test-status-"));
     writeFileSync(join(dir, "package.json"), "{}");
     run("init", dir);
   });
@@ -106,7 +106,7 @@ describe("remember", () => {
   let dir;
 
   before(() => {
-    dir = mkdtempSync(join(tmpdir(), "actx-test-rem-"));
+    dir = mkdtempSync(join(tmpdir(), "amem-test-rem-"));
     writeFileSync(join(dir, "package.json"), "{}");
     run("init", dir);
   });
@@ -142,7 +142,7 @@ describe("search", () => {
   let dir;
 
   before(() => {
-    dir = mkdtempSync(join(tmpdir(), "actx-test-search-"));
+    dir = mkdtempSync(join(tmpdir(), "amem-test-search-"));
     writeFileSync(join(dir, "package.json"), "{}");
     run("init", dir);
     run('remember --decision "chose PostgreSQL for persistence"', dir);

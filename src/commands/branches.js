@@ -15,7 +15,7 @@ export default async function branches({ args, flags }) {
 
   if (!branchNames.length) {
     console.log("\n  No exploration branches yet.");
-    console.log('  Create one: agent-context branch <name> "purpose"');
+    console.log('  Create one: agent-mem branch <name> "purpose"');
     return;
   }
 

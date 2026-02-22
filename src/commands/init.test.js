@@ -13,7 +13,7 @@ describe("init", () => {
   let dir;
 
   before(() => {
-    dir = mkdtempSync(join(tmpdir(), "actx-test-init-"));
+    dir = mkdtempSync(join(tmpdir(), "amem-test-init-"));
     writeFileSync(join(dir, "package.json"), JSON.stringify({
       name: "test-proj",
       dependencies: { next: "15", react: "19", typescript: "5" },
@@ -61,7 +61,7 @@ describe("init --from-claude", () => {
   let dir;
 
   before(() => {
-    dir = mkdtempSync(join(tmpdir(), "actx-test-claude-"));
+    dir = mkdtempSync(join(tmpdir(), "amem-test-claude-"));
     writeFileSync(join(dir, "package.json"), "{}");
     writeFileSync(join(dir, "CLAUDE.md"), "# Project Rules\n\nAlways use TypeScript.\n");
   });

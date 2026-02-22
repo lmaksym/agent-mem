@@ -42,7 +42,7 @@ export default async function commit({ args, flags }) {
       const sinceLast = sinceRef ? commitCountSince(ctxDir, sinceRef) : count;
       if (sinceLast >= freq) {
         console.log("");
-        console.log(`📌 REFLECTION DUE: ${sinceLast} commits since last reflection. Run: actx reflect`);
+        console.log(`📌 REFLECTION DUE: ${sinceLast} commits since last reflection. Run: amem reflect`);
       }
     }
   } finally {
