@@ -8,7 +8,9 @@ Context management CLI for AI coding agents. Like [agent-browser](https://github
 
 AI coding agents lose context between sessions. `CLAUDE.md` is manual. Memory files get stale. When you start a new session, you "re-teach" the agent everything — project conventions, past decisions, what you tried and why.
 
-**agent-context** gives agents a structured, versioned context filesystem they can read and write through bash. It works with Claude Code, Codex, Cursor, Windsurf, Antigravity — any agent that can run shell commands.
+**agent-context** gives agents a structured, versioned context filesystem they can read and write through bash. It works with Claude Code, Codex, Cursor, Windsurf, Gemini CLI — any agent that can run shell commands.
+
+On `init`, the [Agent Skills](https://agentskills.io) skill is automatically installed to the 3 universal directories that cover ~14 tools: `.claude/skills/`, `.agents/skills/`, `.github/skills/`.
 
 ## Install
 
@@ -147,6 +149,11 @@ agent-context reflect defrag          # Analyze memory health
 ```bash
 agent-context sync                    # Export to IDE rule files (auto-detect)
 agent-context sync --claude           # Export to CLAUDE.md
+agent-context sync --codex            # Export to AGENTS.md
+agent-context sync --cursor           # Export to .cursorrules
+agent-context sync --windsurf         # Export to .windsurfrules
+agent-context sync --gemini           # Export to GEMINI.md
+agent-context sync --all              # Export to all formats
 agent-context track                   # Toggle .context/ in project git
 agent-context push                    # Push .context/ to remote
 agent-context pull                    # Pull .context/ from remote
