@@ -1,6 +1,6 @@
 {
   "name": "@lmaksym/agent-mem",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Persistent, git-backed memory for AI coding agents.",
   "type": "module",
   "bin": {
