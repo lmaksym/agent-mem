@@ -4,8 +4,8 @@
   "description": "Persistent, git-backed memory for AI coding agents.",
   "type": "module",
   "bin": {
-    "agent-mem": "./bin/agent-context.js",
-    "amem": "./bin/agent-context.js"
+    "agent-mem": "bin/agent-context.js",
+    "amem": "bin/agent-context.js"
   },
   "scripts": {
     "start": "node bin/agent-context.js",
@@ -33,7 +33,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lmaksym/agent-mem.git"
+    "url": "git+https://github.com/lmaksym/agent-mem.git"
   },
   "homepage": "https://github.com/lmaksym/agent-mem",
   "bugs": {
