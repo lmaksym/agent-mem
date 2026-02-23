@@ -1,9 +1,9 @@
-import { existsSync, readdirSync, statSync } from "node:fs";
-import { join } from "node:path";
-import { readContextFile, writeContextFile, parseFrontmatter } from "./fs.js";
-import { readConfig } from "./config.js";
-import { commitContext } from "./git.js";
-import { getReflectionFiles } from "./reflect-gather.js";
+import { existsSync, readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+import { readContextFile, writeContextFile, parseFrontmatter } from './fs.js';
+import { readConfig } from './config.js';
+import { commitContext } from './git.js';
+import { getReflectionFiles } from './reflect-gather.js';
 
 /**
  * Tokenize a string into a set of lowercase words.
@@ -12,9 +12,9 @@ function wordSet(text) {
   return new Set(
     text
       .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, " ")
+      .replace(/[^a-z0-9\s]/g, ' ')
       .split(/\s+/)
-      .filter((w) => w.length > 2)
+      .filter((w) => w.length > 2),
   );
 }
 
@@ -37,7 +37,7 @@ function jaccard(setA, setB) {
 function parseEntries(content) {
   if (!content) return [];
   const entries = [];
-  const lines = content.split("\n");
+  const lines = content.split('\n');
   for (let i = 0; i < lines.length; i++) {
     const match = lines[i].match(/^- \[(\d{4}-\d{2}-\d{2})[\s\d:]*\]\s*(.+)/);
     if (match) {
@@ -58,12 +58,14 @@ function getReaffirmedText(ctxDir) {
     if (!raw) continue;
     // Extract relevant sections
     const content = parseFrontmatter(raw).content;
-    const sectionMatch = content.match(/## (?:Patterns Identified|Decisions Validated)\n([\s\S]*?)(?=\n## |\n$|$)/g);
+    const sectionMatch = content.match(
+      /## (?:Patterns Identified|Decisions Validated)\n([\s\S]*?)(?=\n## |\n$|$)/g,
+    );
     if (sectionMatch) {
       texts.push(...sectionMatch);
     }
   }
-  return texts.join("\n").toLowerCase();
+  return texts.join('\n').toLowerCase();
 }
 
 /**
@@ -76,13 +78,20 @@ export function analyzeDefrag(ctxDir) {
   const sizeKb = config.reflection?.defrag_size_kb || 10;
   const staleDays = config.reflection?.stale_days || 30;
 
-  const memDir = join(ctxDir, "memory");
+  const memDir = join(ctxDir, 'memory');
   if (!existsSync(memDir)) {
-    return { oversized: [], duplicates: [], stale: [], structural: [], health: "GOOD", issueCount: 0 };
+    return {
+      oversized: [],
+      duplicates: [],
+      stale: [],
+      structural: [],
+      health: 'GOOD',
+      issueCount: 0,
+    };
   }
 
   const files = readdirSync(memDir)
-    .filter((n) => n.endsWith(".md") && !n.startsWith("."))
+    .filter((n) => n.endsWith('.md') && !n.startsWith('.'))
     .sort();
 
   const oversized = [];
@@ -115,10 +124,10 @@ export function analyzeDefrag(ctxDir) {
 
     // Check structural issues
     if (!description && entries.length > 0) {
-      structural.push({ file: relPath, issue: "missing frontmatter (description)" });
+      structural.push({ file: relPath, issue: 'missing frontmatter (description)' });
     }
-    if (entries.length === 0 && content.trim().split("\n").length <= 6) {
-      structural.push({ file: relPath, issue: "empty (no entries)" });
+    if (entries.length === 0 && content.trim().split('\n').length <= 6) {
+      structural.push({ file: relPath, issue: 'empty (no entries)' });
     }
 
     // Check duplicates within the same file
@@ -160,7 +169,7 @@ export function analyzeDefrag(ctxDir) {
   }
 
   const issueCount = oversized.length + duplicates.length + stale.length + structural.length;
-  const health = issueCount === 0 ? "GOOD" : issueCount <= 3 ? "FAIR" : "NEEDS_ATTENTION";
+  const health = issueCount === 0 ? 'GOOD' : issueCount <= 3 ? 'FAIR' : 'NEEDS_ATTENTION';
 
   return { oversized, duplicates, stale, structural, health, issueCount };
 }
@@ -170,69 +179,71 @@ export function analyzeDefrag(ctxDir) {
  */
 export function formatDefragOutput(analysis, isDryRun) {
   const lines = [];
-  const marker = isDryRun ? " (dry run — no changes)" : "";
+  const marker = isDryRun ? ' (dry run — no changes)' : '';
   lines.push(`🔧 DEFRAG ANALYSIS${marker}`);
-  lines.push("");
+  lines.push('');
 
   // Oversized
   if (analysis.oversized.length > 0) {
-    lines.push("OVERSIZED FILES:");
+    lines.push('OVERSIZED FILES:');
     for (const o of analysis.oversized) {
       lines.push(`  ${o.file} — ${o.entries} entries, ${o.sizeFormatted}`);
       lines.push(`  ⤷ Suggest: split by domain or time period`);
     }
-    lines.push("");
+    lines.push('');
   }
 
   // Duplicates
   if (analysis.duplicates.length > 0) {
-    lines.push("POTENTIAL DUPLICATES:");
+    lines.push('POTENTIAL DUPLICATES:');
     for (const d of analysis.duplicates) {
-      lines.push(`  ${d.file} line ${d.lineA} ↔ line ${d.lineB} (${(d.similarity * 100).toFixed(0)}% similar)`);
+      lines.push(
+        `  ${d.file} line ${d.lineA} ↔ line ${d.lineB} (${(d.similarity * 100).toFixed(0)}% similar)`,
+      );
       lines.push(`    "${d.textA}"`);
       lines.push(`    "${d.textB}"`);
       lines.push(`  ⤷ Suggest: merge into single, more specific entry`);
     }
-    lines.push("");
+    lines.push('');
   }
 
   // Stale
   if (analysis.stale.length > 0) {
-    lines.push(`STALE ENTRIES (>${analysis.stale[0] ? "" : ""}30 days, unreferenced):`);
+    lines.push(`STALE ENTRIES (>${analysis.stale[0] ? '' : ''}30 days, unreferenced):`);
     for (const s of analysis.stale) {
       lines.push(`  ${s.file} line ${s.line} — [${s.date}] "${s.text}"`);
     }
     lines.push(`  ⤷ Suggest: archive or remove if no longer relevant`);
-    lines.push("");
+    lines.push('');
   }
 
   // Structural
   if (analysis.structural.length > 0) {
-    lines.push("STRUCTURAL ISSUES:");
+    lines.push('STRUCTURAL ISSUES:');
     for (const s of analysis.structural) {
       lines.push(`  ${s.file} — ${s.issue}`);
     }
-    lines.push("");
+    lines.push('');
   }
 
   if (analysis.issueCount === 0) {
-    lines.push("No issues found.");
-    lines.push("");
+    lines.push('No issues found.');
+    lines.push('');
   }
 
   lines.push(`Memory health: ${analysis.health} (${analysis.issueCount} issues)`);
-  lines.push("");
+  lines.push('');
 
   // Instructions
-  lines.push("═══ INSTRUCTIONS ═══");
-  lines.push("To act on suggestions:");
+  lines.push('═══ INSTRUCTIONS ═══');
+  lines.push('To act on suggestions:');
   lines.push('  amem write memory/<file>.md "<cleaned content>"');
   lines.push('  amem commit "defrag: reorganized memory files"');
-  lines.push("");
-  lines.push("Or run a full reflect cycle to address holistically:");
-  lines.push("  amem reflect gather --deep");
+  lines.push('');
+  lines.push('Or run a full reflect cycle to address holistically:');
+  lines.push('  amem reflect gather --deep');
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 /**
@@ -256,20 +267,20 @@ export function applyStaleMarkers(ctxDir, staleEntries) {
     let content = readContextFile(ctxDir, file);
     if (!content) continue;
 
-    const lines = content.split("\n");
+    const lines = content.split('\n');
     // Process in reverse order so line numbers stay valid
     const lineNums = entries.map((e) => e.line).sort((a, b) => b - a);
 
     for (const lineNum of lineNums) {
       const idx = lineNum - 1;
-      if (idx >= 0 && idx < lines.length && !lines[idx].includes("[STALE]")) {
+      if (idx >= 0 && idx < lines.length && !lines[idx].includes('[STALE]')) {
         // Insert stale marker after the entry line
         lines.splice(idx + 1, 0, `- [${today} STALE] ^^^ flagged by reflection — may be outdated`);
         marked++;
       }
     }
 
-    writeContextFile(ctxDir, file, lines.join("\n"));
+    writeContextFile(ctxDir, file, lines.join('\n'));
   }
 
   return marked;

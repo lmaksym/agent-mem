@@ -1,5 +1,5 @@
-import { existsSync } from "node:fs";
-import { join, dirname, resolve } from "node:path";
+import { existsSync } from 'node:fs';
+import { join, dirname, resolve } from 'node:path';
 
 /**
  * Walk up from `cwd` looking for a .context/ directory.
@@ -7,10 +7,10 @@ import { join, dirname, resolve } from "node:path";
  */
 export function findContextRoot(cwd) {
   let dir = resolve(cwd);
-  const root = dirname(dir) === dir ? dir : "/"; // filesystem root
+  const root = dirname(dir) === dir ? dir : '/'; // filesystem root
 
   while (true) {
-    if (existsSync(join(dir, ".context"))) {
+    if (existsSync(join(dir, '.context'))) {
       return dir;
     }
     const parent = dirname(dir);
@@ -24,5 +24,5 @@ export function findContextRoot(cwd) {
  * Get the .context/ directory path from project root.
  */
 export function contextDir(projectRoot) {
-  return join(projectRoot, ".context");
+  return join(projectRoot, '.context');
 }

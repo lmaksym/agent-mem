@@ -1,5 +1,5 @@
-import { readConfig } from "./config.js";
-import { commitContext, commitCount } from "./git.js";
+import { readConfig } from './config.js';
+import { commitContext, commitCount } from './git.js';
 
 /**
  * Check if auto-commit should fire, and commit if so.

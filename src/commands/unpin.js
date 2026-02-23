@@ -1,19 +1,19 @@
-import { contextDir as getContextDir } from "../core/context-root.js";
-import { moveContextFile } from "../core/fs.js";
-import { existsSync } from "node:fs";
-import { join, basename } from "node:path";
+import { contextDir as getContextDir } from '../core/context-root.js';
+import { moveContextFile } from '../core/fs.js';
+import { existsSync } from 'node:fs';
+import { join, basename } from 'node:path';
 
 export default async function unpin({ args, flags }) {
   const root = flags._contextRoot;
   const ctxDir = getContextDir(root);
 
   if (!args.length) {
-    console.error("❌ Usage: agent-mem unpin <path>");
-    console.error("Example: agent-mem unpin system/old-conventions.md");
+    console.error('❌ Usage: agent-mem unpin <path>');
+    console.error('Example: agent-mem unpin system/old-conventions.md');
     process.exit(1);
   }
 
-  const relPath = args[0].startsWith("system/") ? args[0] : `system/${args[0]}`;
+  const relPath = args[0].startsWith('system/') ? args[0] : `system/${args[0]}`;
   const name = basename(relPath);
   const dest = `memory/${name}`;
 

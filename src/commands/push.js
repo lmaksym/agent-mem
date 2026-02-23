@@ -1,9 +1,9 @@
-import { contextDir as getContextDir } from "../core/context-root.js";
-import { git, isGitRepo, hasChanges, commitContext } from "../core/git.js";
+import { contextDir as getContextDir } from '../core/context-root.js';
+import { git, isGitRepo, hasChanges, commitContext } from '../core/git.js';
 
 /**
  * Push .context/ to its own remote repository.
- * 
+ *
  * agent-mem push                     — push to configured remote
  * agent-mem push --remote <url>      — set remote and push
  */
@@ -19,7 +19,7 @@ export default async function push({ args, flags }) {
   // Set remote if provided
   if (flags.remote) {
     try {
-      git("remote remove origin", ctxDir);
+      git('remote remove origin', ctxDir);
     } catch {}
     git(`remote add origin ${flags.remote}`, ctxDir);
     console.log(`  🔗 Remote set: ${flags.remote}`);
@@ -28,13 +28,13 @@ export default async function push({ args, flags }) {
   // Check if remote exists
   let remoteUrl;
   try {
-    remoteUrl = git("remote get-url origin", ctxDir);
+    remoteUrl = git('remote get-url origin', ctxDir);
   } catch {
-    console.error("❌ No remote configured. Use: agent-mem push --remote <git-url>");
-    console.error("");
-    console.error("Example:");
-    console.error("  agent-mem push --remote git@github.com:user/myproject-context.git");
-    console.error("  agent-mem push --remote https://github.com/user/myproject-context.git");
+    console.error('❌ No remote configured. Use: agent-mem push --remote <git-url>');
+    console.error('');
+    console.error('Example:');
+    console.error('  agent-mem push --remote git@github.com:user/myproject-context.git');
+    console.error('  agent-mem push --remote https://github.com/user/myproject-context.git');
     process.exit(1);
   }
 
@@ -46,18 +46,18 @@ export default async function push({ args, flags }) {
 
   // Ensure branch exists
   try {
-    git("rev-parse HEAD", ctxDir);
+    git('rev-parse HEAD', ctxDir);
   } catch {
-    console.error("❌ No commits yet. Run some commands first, then push.");
+    console.error('❌ No commits yet. Run some commands first, then push.');
     process.exit(1);
   }
 
   // Get current branch name
   let branch;
   try {
-    branch = git("branch --show-current", ctxDir);
+    branch = git('branch --show-current', ctxDir);
   } catch {
-    branch = "main";
+    branch = 'main';
   }
 
   // Push
@@ -73,7 +73,7 @@ export default async function push({ args, flags }) {
       console.log(`\n✅ PUSHED: .context/ → ${remoteUrl}`);
     } catch (err2) {
       console.error(`❌ Push failed: ${err2.message}`);
-      console.error("Try: agent-mem push --remote <url> (to reconfigure)");
+      console.error('Try: agent-mem push --remote <url> (to reconfigure)');
       process.exit(1);
     }
   }

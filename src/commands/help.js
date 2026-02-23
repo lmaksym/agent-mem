@@ -1,5 +1,6 @@
 export default async function help() {
-  console.log(`
+  console.log(
+    `
 agent-mem — Context management CLI for AI coding agents
 
 USAGE
@@ -93,5 +94,6 @@ EXAMPLES
 
 MORE INFO
   https://github.com/lmaksym/agent-mem
-`.trim());
+`.trim(),
+  );
 }

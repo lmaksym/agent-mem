@@ -1,14 +1,14 @@
-import { existsSync, writeFileSync, readFileSync, mkdirSync } from "node:fs";
-import { join, basename } from "node:path";
-import { createHash } from "node:crypto";
-import { contextDir as getContextDir } from "../core/context-root.js";
-import { buildTree, readContextFile } from "../core/fs.js";
-import { readConfig } from "../core/config.js";
-import { commitCount, lastCommit } from "../core/git.js";
+import { existsSync, writeFileSync, readFileSync, mkdirSync } from 'node:fs';
+import { join, basename } from 'node:path';
+import { createHash } from 'node:crypto';
+import { contextDir as getContextDir } from '../core/context-root.js';
+import { buildTree, readContextFile } from '../core/fs.js';
+import { readConfig } from '../core/config.js';
+import { commitCount, lastCommit } from '../core/git.js';
 
 /**
  * Generate a portable context snapshot that can be shared with anyone.
- * 
+ *
  * agent-mem share                    — generate snapshot file
  * agent-mem share --output <path>    — custom output path
  * agent-mem import <file-or-url>     — import a shared snapshot
@@ -36,9 +36,9 @@ export default async function share({ args, flags }) {
 
   const snapshot = {
     version: 1,
-    tool: "agent-mem",
+    tool: 'agent-mem',
     project: projectName,
-    branch: config.branch || "main",
+    branch: config.branch || 'main',
     commits,
     lastCommit: last,
     createdAt: new Date().toISOString(),
@@ -46,7 +46,7 @@ export default async function share({ args, flags }) {
   };
 
   const json = JSON.stringify(snapshot, null, 2);
-  const hash = createHash("sha256").update(json).digest("hex").slice(0, 8);
+  const hash = createHash('sha256').update(json).digest('hex').slice(0, 8);
   const filename = `context-${projectName}-${hash}.json`;
 
   const outputPath = flags.output || join(root, filename);
@@ -59,7 +59,7 @@ export default async function share({ args, flags }) {
   console.log(`  Project: ${projectName}`);
   console.log(`  Files: ${fileCount} | Size: ${sizeKb} KB | Commits: ${commits}`);
   console.log(`  Path: ${outputPath}`);
-  console.log("");
-  console.log("To import on another machine:");
+  console.log('');
+  console.log('To import on another machine:');
   console.log(`  agent-mem import ${filename}`);
 }

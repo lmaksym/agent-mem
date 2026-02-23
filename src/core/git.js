@@ -1,13 +1,17 @@
-import { execSync } from "node:child_process";
-import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { execSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 
 /**
  * Run a git command in the given directory. Returns stdout as string.
  */
 export function git(args, cwd) {
   try {
-    return execSync(`git ${args}`, { cwd, encoding: "utf-8", stdio: ["pipe", "pipe", "pipe"] }).trim();
+    return execSync(`git ${args}`, {
+      cwd,
+      encoding: 'utf-8',
+      stdio: ['pipe', 'pipe', 'pipe'],
+    }).trim();
   } catch (err) {
     throw new Error(`git ${args} failed: ${err.stderr?.trim() || err.message}`);
   }
@@ -18,7 +22,7 @@ export function git(args, cwd) {
  */
 export function isGitRepo(cwd) {
   try {
-    git("rev-parse --is-inside-work-tree", cwd);
+    git('rev-parse --is-inside-work-tree', cwd);
     return true;
   } catch {
     return false;
@@ -30,7 +34,7 @@ export function isGitRepo(cwd) {
  */
 export function initGit(contextDir) {
   if (!isGitRepo(contextDir)) {
-    git("init", contextDir);
+    git('init', contextDir);
   }
 }
 
@@ -38,18 +42,18 @@ export function initGit(contextDir) {
  * Stage and commit all changes in .context/.
  */
 export function commitContext(contextDir, message) {
-  git("add -A", contextDir);
+  git('add -A', contextDir);
 
   // Check if there are staged changes
   try {
-    git("diff --cached --quiet", contextDir);
+    git('diff --cached --quiet', contextDir);
     return null; // nothing to commit
   } catch {
     // There are changes — commit them
   }
 
   git(`commit -m "${message.replace(/"/g, '\\"')}"`, contextDir);
-  return git("rev-parse --short HEAD", contextDir);
+  return git('rev-parse --short HEAD', contextDir);
 }
 
 /**
@@ -57,7 +61,7 @@ export function commitContext(contextDir, message) {
  */
 export function commitCount(contextDir) {
   try {
-    return parseInt(git("rev-list --count HEAD", contextDir), 10);
+    return parseInt(git('rev-list --count HEAD', contextDir), 10);
   } catch {
     return 0;
   }
@@ -69,7 +73,7 @@ export function commitCount(contextDir) {
 export function lastCommit(contextDir) {
   try {
     const log = git('log -1 --format="%h|%s|%cr"', contextDir);
-    const [hash, message, timeAgo] = log.split("|");
+    const [hash, message, timeAgo] = log.split('|');
     return { hash, message, timeAgo };
   } catch {
     return null;
@@ -81,7 +85,7 @@ export function lastCommit(contextDir) {
  */
 export function hasChanges(contextDir) {
   try {
-    const status = git("status --porcelain", contextDir);
+    const status = git('status --porcelain', contextDir);
     return status.length > 0;
   } catch {
     return false;
@@ -94,11 +98,11 @@ export function hasChanges(contextDir) {
  */
 export function gitLog(contextDir, sinceRef, maxCount = 50) {
   try {
-    const range = sinceRef ? `${sinceRef}..HEAD` : "HEAD";
+    const range = sinceRef ? `${sinceRef}..HEAD` : 'HEAD';
     const raw = git(`log ${range} --format="%h|%s|%ai" -n ${maxCount}`, contextDir);
     if (!raw) return [];
-    return raw.split("\n").map((line) => {
-      const [hash, message, date] = line.split("|");
+    return raw.split('\n').map((line) => {
+      const [hash, message, date] = line.split('|');
       return { hash, message, date };
     });
   } catch {
@@ -127,14 +131,17 @@ export function gitDiffStat(contextDir, sinceRef) {
     const range = sinceRef ? `${sinceRef}..HEAD` : `$(git rev-list --max-parents=0 HEAD)..HEAD`;
     const raw = git(`diff --numstat ${range}`, contextDir);
     if (!raw) return [];
-    return raw.split("\n").filter(Boolean).map((line) => {
-      const [added, removed, file] = line.split("\t");
-      return {
-        file,
-        added: added === "-" ? 0 : parseInt(added, 10),
-        removed: removed === "-" ? 0 : parseInt(removed, 10),
-      };
-    });
+    return raw
+      .split('\n')
+      .filter(Boolean)
+      .map((line) => {
+        const [added, removed, file] = line.split('\t');
+        return {
+          file,
+          added: added === '-' ? 0 : parseInt(added, 10),
+          removed: removed === '-' ? 0 : parseInt(removed, 10),
+        };
+      });
   } catch {
     return [];
   }
@@ -148,7 +155,7 @@ export function gitDiffFiles(contextDir, sinceRef, path) {
     const range = sinceRef ? `${sinceRef}..HEAD` : `$(git rev-list --max-parents=0 HEAD)..HEAD`;
     return git(`diff ${range} -- ${path}`, contextDir);
   } catch {
-    return "";
+    return '';
   }
 }
 
@@ -168,7 +175,7 @@ export function gitShowFile(contextDir, ref, path) {
  */
 export function firstCommit(contextDir) {
   try {
-    return git("rev-list --max-parents=0 HEAD", contextDir).split("\n")[0];
+    return git('rev-list --max-parents=0 HEAD', contextDir).split('\n')[0];
   } catch {
     return null;
   }

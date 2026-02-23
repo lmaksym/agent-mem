@@ -1,7 +1,7 @@
-import { writeFileSync, unlinkSync, existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { writeFileSync, unlinkSync, existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
-const LOCK_FILE = ".context.lock";
+const LOCK_FILE = '.context.lock';
 const LOCK_TIMEOUT_MS = 30_000; // 30 seconds
 
 /**
@@ -15,7 +15,7 @@ export function acquireLock(projectRoot) {
   // Check for stale lock
   if (existsSync(lockPath)) {
     try {
-      const data = JSON.parse(readFileSync(lockPath, "utf-8"));
+      const data = JSON.parse(readFileSync(lockPath, 'utf-8'));
       const age = Date.now() - data.timestamp;
 
       if (age > LOCK_TIMEOUT_MS) {
@@ -30,24 +30,33 @@ export function acquireLock(projectRoot) {
         }
 
         if (existsSync(lockPath)) {
-          console.error(`⚠️  Context locked by PID ${data.pid} (${Math.round(age / 1000)}s ago). Proceeding anyway.`);
+          console.error(
+            `⚠️  Context locked by PID ${data.pid} (${Math.round(age / 1000)}s ago). Proceeding anyway.`,
+          );
           // Don't block — just warn. Append-only files are safe for concurrent writes.
         }
       }
     } catch {
       // Corrupted lock file — remove
-      try { unlinkSync(lockPath); } catch {}
+      try {
+        unlinkSync(lockPath);
+      } catch {}
     }
   }
 
   // Write lock
-  writeFileSync(lockPath, JSON.stringify({
-    pid: process.pid,
-    timestamp: Date.now(),
-  }));
+  writeFileSync(
+    lockPath,
+    JSON.stringify({
+      pid: process.pid,
+      timestamp: Date.now(),
+    }),
+  );
 
   // Return release function
   return () => {
-    try { unlinkSync(lockPath); } catch {}
+    try {
+      unlinkSync(lockPath);
+    } catch {}
   };
 }

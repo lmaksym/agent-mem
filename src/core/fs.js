@@ -1,5 +1,13 @@
-import { readFileSync, writeFileSync, readdirSync, statSync, mkdirSync, existsSync, renameSync } from "node:fs";
-import { join, relative, basename, dirname } from "node:path";
+import {
+  readFileSync,
+  writeFileSync,
+  readdirSync,
+  statSync,
+  mkdirSync,
+  existsSync,
+  renameSync,
+} from 'node:fs';
+import { join, relative, basename, dirname } from 'node:path';
 
 /**
  * Read a file from .context/, returns content or null.
@@ -7,7 +15,7 @@ import { join, relative, basename, dirname } from "node:path";
 export function readContextFile(contextDir, relPath) {
   const fullPath = join(contextDir, relPath);
   if (!existsSync(fullPath)) return null;
-  return readFileSync(fullPath, "utf-8");
+  return readFileSync(fullPath, 'utf-8');
 }
 
 /**
@@ -16,7 +24,7 @@ export function readContextFile(contextDir, relPath) {
 export function writeContextFile(contextDir, relPath, content) {
   const fullPath = join(contextDir, relPath);
   mkdirSync(dirname(fullPath), { recursive: true });
-  writeFileSync(fullPath, content, "utf-8");
+  writeFileSync(fullPath, content, 'utf-8');
 }
 
 /**
@@ -41,7 +49,9 @@ export function parseFrontmatter(text) {
   const frontmatter = match[1];
   const content = match[2];
   const desc = frontmatter.match(/description:\s*['"]?(.*?)['"]?\s*$/m)?.[1] || null;
-  const limit = frontmatter.match(/limit:\s*(\d+)/)?.[1] ? parseInt(frontmatter.match(/limit:\s*(\d+)/)[1]) : null;
+  const limit = frontmatter.match(/limit:\s*(\d+)/)?.[1]
+    ? parseInt(frontmatter.match(/limit:\s*(\d+)/)[1])
+    : null;
   const readOnly = /read_only:\s*true/i.test(frontmatter);
 
   return { description: desc, limit, readOnly, content };
@@ -51,14 +61,16 @@ export function parseFrontmatter(text) {
  * Build a tree representation of .context/ directory.
  * Returns array of { path, name, isDir, description, size }.
  */
-export function buildTree(contextDir, subDir = "", depth = 0, maxDepth = 4) {
+export function buildTree(contextDir, subDir = '', depth = 0, maxDepth = 4) {
   const entries = [];
   const fullDir = join(contextDir, subDir);
 
   if (!existsSync(fullDir)) return entries;
   if (depth > maxDepth) return entries;
 
-  const items = readdirSync(fullDir).filter((n) => !n.startsWith(".")).sort();
+  const items = readdirSync(fullDir)
+    .filter((n) => !n.startsWith('.'))
+    .sort();
 
   for (const name of items) {
     const relPath = subDir ? `${subDir}/${name}` : name;
@@ -68,8 +80,8 @@ export function buildTree(contextDir, subDir = "", depth = 0, maxDepth = 4) {
     if (stat.isDirectory()) {
       entries.push({ path: relPath, name, isDir: true, depth });
       entries.push(...buildTree(contextDir, relPath, depth + 1, maxDepth));
-    } else if (name.endsWith(".md") || name.endsWith(".yaml") || name.endsWith(".yml")) {
-      const content = readFileSync(fullPath, "utf-8");
+    } else if (name.endsWith('.md') || name.endsWith('.yaml') || name.endsWith('.yml')) {
+      const content = readFileSync(fullPath, 'utf-8');
       const { description } = parseFrontmatter(content);
       entries.push({
         path: relPath,
@@ -89,9 +101,11 @@ export function buildTree(contextDir, subDir = "", depth = 0, maxDepth = 4) {
  * Get the first meaningful line of content as a summary.
  */
 function summarizeLine(text) {
-  const lines = text.split("\n").filter((l) => l.trim() && !l.startsWith("---") && !l.startsWith("#"));
-  const first = lines[0]?.trim() || "";
-  return first.length > 80 ? first.slice(0, 77) + "..." : first;
+  const lines = text
+    .split('\n')
+    .filter((l) => l.trim() && !l.startsWith('---') && !l.startsWith('#'));
+  const first = lines[0]?.trim() || '';
+  return first.length > 80 ? first.slice(0, 77) + '...' : first;
 }
 
 /**
@@ -100,7 +114,7 @@ function summarizeLine(text) {
 export function listFiles(contextDir, subDir) {
   const fullDir = join(contextDir, subDir);
   if (!existsSync(fullDir)) return [];
-  return readdirSync(fullDir).filter((n) => !n.startsWith("."));
+  return readdirSync(fullDir).filter((n) => !n.startsWith('.'));
 }
 
 /**
@@ -112,7 +126,7 @@ export function countFiles(contextDir, subDir) {
   let count = 0;
   const walk = (dir) => {
     for (const name of readdirSync(dir)) {
-      if (name.startsWith(".")) continue;
+      if (name.startsWith('.')) continue;
       const full = join(dir, name);
       if (statSync(full).isDirectory()) walk(full);
       else count++;

@@ -1,9 +1,9 @@
-import { existsSync, readdirSync, statSync, unlinkSync } from "node:fs";
-import { join } from "node:path";
-import { contextDir as getContextDir } from "../core/context-root.js";
-import { readContextFile, writeContextFile, listFiles } from "../core/fs.js";
-import { commitContext, hasChanges } from "../core/git.js";
-import { readConfig } from "../core/config.js";
+import { existsSync, readdirSync, statSync, unlinkSync } from 'node:fs';
+import { join } from 'node:path';
+import { contextDir as getContextDir } from '../core/context-root.js';
+import { readContextFile, writeContextFile, listFiles } from '../core/fs.js';
+import { commitContext, hasChanges } from '../core/git.js';
+import { readConfig } from '../core/config.js';
 
 /**
  * Calculate total byte size of all readable files in .context/.
@@ -13,7 +13,7 @@ function contextByteSize(ctxDir) {
   const walk = (dir) => {
     if (!existsSync(dir)) return;
     for (const name of readdirSync(dir)) {
-      if (name.startsWith(".")) continue;
+      if (name.startsWith('.')) continue;
       const full = join(dir, name);
       const stat = statSync(full);
       if (stat.isDirectory()) walk(full);
@@ -30,7 +30,7 @@ function contextByteSize(ctxDir) {
  * Returns { header: string, entries: Array<{ line: string, date: Date|null, raw: string }> }
  */
 function parseMemoryFile(content) {
-  const lines = content.split("\n");
+  const lines = content.split('\n');
   const headerLines = [];
   const entries = [];
   let inHeader = true;
@@ -58,7 +58,7 @@ function parseMemoryFile(content) {
     // If we're inside a block, accumulate lines
     if (currentBlock) {
       currentBlock._blockLines.push(line);
-      currentBlock.line = currentBlock._blockLines.join("\n");
+      currentBlock.line = currentBlock._blockLines.join('\n');
       currentBlock.raw = currentBlock.line;
       continue;
     }
@@ -89,7 +89,7 @@ function parseMemoryFile(content) {
     entries.push(currentBlock);
   }
 
-  return { header: headerLines.join("\n"), entries };
+  return { header: headerLines.join('\n'), entries };
 }
 
 /**
@@ -98,7 +98,7 @@ function parseMemoryFile(content) {
  * Hard: discard all non-pinned memory entries.
  */
 function selectEntries(entries, mode, config) {
-  if (mode === "hard") return []; // Hard mode: archive everything
+  if (mode === 'hard') return []; // Hard mode: archive everything
 
   const retainDays = config.compact?.retain_days || 7;
   const cutoff = new Date(Date.now() - retainDays * 24 * 60 * 60 * 1000);
@@ -111,16 +111,16 @@ export default async function compact({ args, flags }) {
   const ctxDir = getContextDir(root);
   const config = readConfig(ctxDir);
 
-  const isDryRun = flags["dry-run"] === true;
+  const isDryRun = flags['dry-run'] === true;
   const isHard = flags.hard === true;
-  const mode = isHard ? "hard" : "default";
+  const mode = isHard ? 'hard' : 'default';
 
   // 1. Measure before size
   const beforeBytes = contextByteSize(ctxDir);
 
   // 2. Safety checkpoint (auto-commit before compact)
   if (!isDryRun && hasChanges(ctxDir)) {
-    const hash = commitContext(ctxDir, "compact: pre-compact checkpoint");
+    const hash = commitContext(ctxDir, 'compact: pre-compact checkpoint');
     if (hash) {
       console.log(`💾 Pre-compact checkpoint: ${hash}`);
     }
@@ -131,15 +131,15 @@ export default async function compact({ args, flags }) {
   const archived = [];
 
   // 3a. System/ (pinned) — ALWAYS kept
-  const systemFiles = listFiles(ctxDir, "system");
+  const systemFiles = listFiles(ctxDir, 'system');
   for (const name of systemFiles) {
-    kept.push({ path: `system/${name}`, reason: "pinned" });
+    kept.push({ path: `system/${name}`, reason: 'pinned' });
   }
 
   // 3b. Memory files — filter entries by recency (or archive all in hard mode)
-  const memDir = join(ctxDir, "memory");
+  const memDir = join(ctxDir, 'memory');
   if (existsSync(memDir)) {
-    const memFiles = readdirSync(memDir).filter((n) => n.endsWith(".md") && !n.startsWith("."));
+    const memFiles = readdirSync(memDir).filter((n) => n.endsWith('.md') && !n.startsWith('.'));
 
     for (const name of memFiles) {
       const relPath = `memory/${name}`;
@@ -155,7 +155,7 @@ export default async function compact({ args, flags }) {
           path: relPath,
           entriesDropped: dropEntries.length,
           entriesKept: keepEntries.length,
-          reason: mode === "hard" ? "hard mode" : "stale (older than retain window)",
+          reason: mode === 'hard' ? 'hard mode' : 'stale (older than retain window)',
         });
       }
 
@@ -163,7 +163,7 @@ export default async function compact({ args, flags }) {
         kept.push({
           path: relPath,
           entries: keepEntries.length,
-          reason: mode === "hard" ? "n/a" : "recent",
+          reason: mode === 'hard' ? 'n/a' : 'recent',
         });
       }
 
@@ -171,35 +171,37 @@ export default async function compact({ args, flags }) {
       if (!isDryRun && dropEntries.length > 0) {
         // Archive dropped entries
         const archivePath = `archive/compact-${new Date().toISOString().slice(0, 10)}/${name}`;
-        const archiveContent = header + "\n" + dropEntries.map((e) => e.line).join("\n") + "\n";
+        const archiveContent = header + '\n' + dropEntries.map((e) => e.line).join('\n') + '\n';
         writeContextFile(ctxDir, archivePath, archiveContent);
 
         if (keepEntries.length > 0) {
           // Rewrite memory file with only kept entries
-          const newContent = header + "\n" + keepEntries.map((e) => e.line).join("\n") + "\n";
+          const newContent = header + '\n' + keepEntries.map((e) => e.line).join('\n') + '\n';
           writeContextFile(ctxDir, relPath, newContent);
         } else {
           // Archive entire file — rewrite as empty with header only
-          writeContextFile(ctxDir, relPath, header + "\n");
+          writeContextFile(ctxDir, relPath, header + '\n');
         }
       }
     }
   }
 
   // 3c. Reflections — archive all except latest in default, archive all in hard
-  const refDir = join(ctxDir, "reflections");
+  const refDir = join(ctxDir, 'reflections');
   if (existsSync(refDir)) {
-    const refFiles = readdirSync(refDir).filter((n) => n.endsWith(".md")).sort();
-    const keepCount = mode === "hard" ? 0 : 1;
+    const refFiles = readdirSync(refDir)
+      .filter((n) => n.endsWith('.md'))
+      .sort();
+    const keepCount = mode === 'hard' ? 0 : 1;
     const toArchive = refFiles.slice(0, refFiles.length - keepCount);
     const toKeep = refFiles.slice(refFiles.length - keepCount);
 
     for (const name of toKeep) {
-      kept.push({ path: `reflections/${name}`, reason: "latest reflection" });
+      kept.push({ path: `reflections/${name}`, reason: 'latest reflection' });
     }
 
     for (const name of toArchive) {
-      archived.push({ path: `reflections/${name}`, reason: "older reflection" });
+      archived.push({ path: `reflections/${name}`, reason: 'older reflection' });
 
       if (!isDryRun) {
         const relPath = `reflections/${name}`;
@@ -216,20 +218,20 @@ export default async function compact({ args, flags }) {
   }
 
   // 3d. Branches metadata — always kept (lightweight)
-  const branchDir = join(ctxDir, "branches");
+  const branchDir = join(ctxDir, 'branches');
   if (existsSync(branchDir)) {
     const branches = readdirSync(branchDir).filter((n) => {
       const full = join(branchDir, n);
       return existsSync(full) && statSync(full).isDirectory();
     });
     if (branches.length > 0) {
-      kept.push({ path: "branches/", reason: "branch metadata", count: branches.length });
+      kept.push({ path: 'branches/', reason: 'branch metadata', count: branches.length });
     }
   }
 
   // 3e. Config — always kept
-  if (existsSync(join(ctxDir, "config.yaml"))) {
-    kept.push({ path: "config.yaml", reason: "configuration" });
+  if (existsSync(join(ctxDir, 'config.yaml'))) {
+    kept.push({ path: 'config.yaml', reason: 'configuration' });
   }
 
   // 4. Measure after size
@@ -238,45 +240,50 @@ export default async function compact({ args, flags }) {
   // 5. Commit compaction
   let commitHash = null;
   if (!isDryRun && archived.length > 0) {
-    const msg = mode === "hard"
-      ? `compact --hard: archived ${archived.length} items, kept pins only`
-      : `compact: archived ${archived.length} items, kept recent + pins`;
+    const msg =
+      mode === 'hard'
+        ? `compact --hard: archived ${archived.length} items, kept pins only`
+        : `compact: archived ${archived.length} items, kept recent + pins`;
     commitHash = commitContext(ctxDir, msg);
   }
 
   // 6. Output report
-  const marker = isDryRun ? " (dry run)" : "";
-  const modeLabel = mode === "hard" ? " --hard" : "";
+  const marker = isDryRun ? ' (dry run)' : '';
+  const modeLabel = mode === 'hard' ? ' --hard' : '';
   console.log(`🗜️  COMPACT${modeLabel}${marker}`);
-  console.log("");
+  console.log('');
 
   if (kept.length > 0) {
-    console.log("KEPT:");
+    console.log('KEPT:');
     for (const k of kept) {
-      const extra = k.entries ? ` (${k.entries} entries)` : k.count ? ` (${k.count})` : "";
+      const extra = k.entries ? ` (${k.entries} entries)` : k.count ? ` (${k.count})` : '';
       console.log(`  ✅ ${k.path}${extra} — ${k.reason}`);
     }
-    console.log("");
+    console.log('');
   }
 
   if (archived.length > 0) {
-    console.log("ARCHIVED:");
+    console.log('ARCHIVED:');
     for (const a of archived) {
-      const extra = a.entriesDropped ? ` (${a.entriesDropped} entries dropped, ${a.entriesKept} kept)` : "";
+      const extra = a.entriesDropped
+        ? ` (${a.entriesDropped} entries dropped, ${a.entriesKept} kept)`
+        : '';
       console.log(`  📦 ${a.path}${extra} — ${a.reason}`);
     }
-    console.log("");
+    console.log('');
   }
 
   if (archived.length === 0) {
-    console.log("Nothing to compact — context is already lean.");
-    console.log("");
+    console.log('Nothing to compact — context is already lean.');
+    console.log('');
   }
 
   // Token delta (byte-based approximation)
   const delta = beforeBytes - afterBytes;
-  const pct = beforeBytes > 0 ? ((delta / beforeBytes) * 100).toFixed(1) : "0.0";
-  console.log(`SIZE: ${formatBytes(beforeBytes)} → ${formatBytes(afterBytes)} (${delta > 0 ? "-" : "+"}${formatBytes(Math.abs(delta))}, ${pct}% reduction)`);
+  const pct = beforeBytes > 0 ? ((delta / beforeBytes) * 100).toFixed(1) : '0.0';
+  console.log(
+    `SIZE: ${formatBytes(beforeBytes)} → ${formatBytes(afterBytes)} (${delta > 0 ? '-' : '+'}${formatBytes(Math.abs(delta))}, ${pct}% reduction)`,
+  );
 
   if (!isDryRun && archived.length > 0) {
     const today = new Date().toISOString().slice(0, 10);
@@ -288,8 +295,8 @@ export default async function compact({ args, flags }) {
   }
 
   if (isDryRun && archived.length > 0) {
-    console.log("");
-    console.log("Run without --dry-run to apply.");
+    console.log('');
+    console.log('Run without --dry-run to apply.');
   }
 }
 

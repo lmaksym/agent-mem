@@ -1,8 +1,15 @@
-import { existsSync, readdirSync, statSync, readFileSync } from "node:fs";
-import { join } from "node:path";
-import { readContextFile, writeContextFile, parseFrontmatter, listFiles } from "./fs.js";
-import { readConfig } from "./config.js";
-import { gitLog, gitDiffStat, gitDiffFiles, commitCountSince, firstCommit, lastCommit } from "./git.js";
+import { existsSync, readdirSync, statSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { readContextFile, writeContextFile, parseFrontmatter, listFiles } from './fs.js';
+import { readConfig } from './config.js';
+import {
+  gitLog,
+  gitDiffStat,
+  gitDiffFiles,
+  commitCountSince,
+  firstCommit,
+  lastCommit,
+} from './git.js';
 
 /**
  * Determine the "since" reference for the reflection window.
@@ -13,7 +20,7 @@ export function resolveSinceRef(ctxDir, flags) {
   if (flags.since) return flags.since;
 
   // Check .reflect-state.json for last saved state
-  const stateRaw = readContextFile(ctxDir, ".reflect-state.json");
+  const stateRaw = readContextFile(ctxDir, '.reflect-state.json');
   if (stateRaw) {
     try {
       const state = JSON.parse(stateRaw);
@@ -44,10 +51,10 @@ export function resolveSinceRef(ctxDir, flags) {
  * Get sorted list of reflection file paths (relative to ctxDir).
  */
 export function getReflectionFiles(ctxDir) {
-  const dir = join(ctxDir, "reflections");
+  const dir = join(ctxDir, 'reflections');
   if (!existsSync(dir)) return [];
   return readdirSync(dir)
-    .filter((n) => n.endsWith(".md") && !n.startsWith("."))
+    .filter((n) => n.endsWith('.md') && !n.startsWith('.'))
     .sort()
     .map((n) => `reflections/${n}`);
 }
@@ -57,7 +64,7 @@ export function getReflectionFiles(ctxDir) {
  */
 function countEntries(content) {
   if (!content) return 0;
-  return content.split("\n").filter((l) => /^- \[/.test(l) || /^### \[/.test(l)).length;
+  return content.split('\n').filter((l) => /^- \[/.test(l) || /^### \[/.test(l)).length;
 }
 
 /**
@@ -65,7 +72,7 @@ function countEntries(content) {
  */
 function lastEntryDate(content) {
   if (!content) return null;
-  const lines = content.split("\n").filter((l) => /^- \[/.test(l) || /^### \[/.test(l));
+  const lines = content.split('\n').filter((l) => /^- \[/.test(l) || /^### \[/.test(l));
   if (!lines.length) return null;
   const match = lines[lines.length - 1].match(/^(?:- |### )\[(\d{4}-\d{2}-\d{2})/);
   return match ? match[1] : null;
@@ -75,11 +82,11 @@ function lastEntryDate(content) {
  * Analyze all memory files. Returns array of { file, entries, size, lastDate, content }.
  */
 function analyzeMemoryFiles(ctxDir) {
-  const memDir = join(ctxDir, "memory");
+  const memDir = join(ctxDir, 'memory');
   if (!existsSync(memDir)) return [];
 
   return readdirSync(memDir)
-    .filter((n) => n.endsWith(".md") && !n.startsWith("."))
+    .filter((n) => n.endsWith('.md') && !n.startsWith('.'))
     .sort()
     .map((name) => {
       const content = readContextFile(ctxDir, `memory/${name}`);
@@ -98,22 +105,25 @@ function analyzeMemoryFiles(ctxDir) {
  * Analyze branch lifecycle. Returns { active, merged }.
  */
 function analyzeBranches(ctxDir) {
-  const branchDir = join(ctxDir, "branches");
+  const branchDir = join(ctxDir, 'branches');
   if (!existsSync(branchDir)) return { active: [], merged: [] };
 
   const config = readConfig(ctxDir);
   const active = [];
   const merged = [];
 
-  for (const name of readdirSync(branchDir).filter((n) => !n.startsWith("."))) {
+  for (const name of readdirSync(branchDir).filter((n) => !n.startsWith('.'))) {
     const purposeRaw = readContextFile(ctxDir, `branches/${name}/purpose.md`);
     const purpose = purposeRaw
-      ? purposeRaw.split("\n").filter((l) => l.trim() && !l.startsWith("#") && !l.startsWith("---"))[0]?.trim() || name
+      ? purposeRaw
+          .split('\n')
+          .filter((l) => l.trim() && !l.startsWith('#') && !l.startsWith('---'))[0]
+          ?.trim() || name
       : name;
 
     // Check if branch was merged (look for merge entry in decisions.md)
-    const decisions = readContextFile(ctxDir, "memory/decisions.md") || "";
-    const mergePattern = new RegExp(`Merged branch: ${name}`, "i");
+    const decisions = readContextFile(ctxDir, 'memory/decisions.md') || '';
+    const mergePattern = new RegExp(`Merged branch: ${name}`, 'i');
     if (mergePattern.test(decisions)) {
       merged.push({ name, purpose });
     } else {
@@ -141,7 +151,9 @@ function getLastReflectionSummary(ctxDir) {
 
   // Extract frontmatter date
   const dateMatch = content.match(/date:\s*['"]?(\d{4}-\d{2}-\d{2})['"]?/);
-  const date = dateMatch ? dateMatch[1] : files[files.length - 1].replace("reflections/", "").replace(".md", "");
+  const date = dateMatch
+    ? dateMatch[1]
+    : files[files.length - 1].replace('reflections/', '').replace('.md', '');
 
   return { date, file: files[files.length - 1], summary };
 }
@@ -175,9 +187,8 @@ export function gatherReflectionPrompt(ctxDir, flags) {
 
   // Determine window dates
   const windowEnd = new Date().toISOString().slice(0, 10);
-  const windowStart = commits.length > 0
-    ? commits[commits.length - 1].date?.slice(0, 10) || "unknown"
-    : "unknown";
+  const windowStart =
+    commits.length > 0 ? commits[commits.length - 1].date?.slice(0, 10) || 'unknown' : 'unknown';
 
   // Write breadcrumb state for save phase
   const state = {
@@ -188,156 +199,162 @@ export function gatherReflectionPrompt(ctxDir, flags) {
     since_ref: sinceRef,
     gathered_at: new Date().toISOString(),
   };
-  writeContextFile(ctxDir, ".reflect-state.json", JSON.stringify(state, null, 2));
+  writeContextFile(ctxDir, '.reflect-state.json', JSON.stringify(state, null, 2));
 
   // Build prompt
   const lines = [];
 
-  lines.push("🔍 REFLECTION INPUT");
+  lines.push('🔍 REFLECTION INPUT');
   lines.push(`Window: ${windowStart} → ${windowEnd} (${totalCommits} commits)`);
-  lines.push(`Last reflection: ${lastReflection ? `${lastReflection.date} (${lastReflection.file})` : "none (first reflection)"}`);
-  lines.push("");
+  lines.push(
+    `Last reflection: ${lastReflection ? `${lastReflection.date} (${lastReflection.file})` : 'none (first reflection)'}`,
+  );
+  lines.push('');
 
   // === RECENT ACTIVITY ===
-  lines.push("═══ RECENT ACTIVITY ═══");
-  lines.push("");
+  lines.push('═══ RECENT ACTIVITY ═══');
+  lines.push('');
 
   lines.push(`COMMITS (${totalCommits}):`);
   for (let i = 0; i < commits.length; i++) {
     const c = commits[i];
-    lines.push(`  ${i + 1}. ${c.hash} | ${c.message} | ${c.date?.slice(0, 16) || ""}`);
+    lines.push(`  ${i + 1}. ${c.hash} | ${c.message} | ${c.date?.slice(0, 16) || ''}`);
   }
   if (totalCommits > 50) {
     lines.push(`  ... and ${totalCommits - 50} earlier commits`);
   }
-  lines.push("");
+  lines.push('');
 
   if (diffStats.length > 0) {
-    lines.push("FILES CHANGED:");
+    lines.push('FILES CHANGED:');
     for (const d of diffStats) {
       lines.push(`  ${d.file}  +${d.added} -${d.removed} lines`);
     }
-    lines.push("");
+    lines.push('');
   }
 
   // Deep mode: include full diffs for memory files
   if (flags.deep && sinceRef) {
-    const memoryDiff = gitDiffFiles(ctxDir, sinceRef, "memory/");
+    const memoryDiff = gitDiffFiles(ctxDir, sinceRef, 'memory/');
     if (memoryDiff) {
-      lines.push("MEMORY DIFFS (--deep):");
+      lines.push('MEMORY DIFFS (--deep):');
       lines.push(memoryDiff);
-      lines.push("");
+      lines.push('');
     }
   }
 
   // Branches
   if (branches.merged.length > 0 || branches.active.length > 0) {
-    lines.push("BRANCHES:");
+    lines.push('BRANCHES:');
     for (const b of branches.merged) {
       lines.push(`  MERGED: ${b.name} → "${b.purpose}"`);
     }
     for (const b of branches.active) {
-      lines.push(`  ACTIVE: ${b.name}${b.isCurrent ? " *" : ""} → "${b.purpose}"`);
+      lines.push(`  ACTIVE: ${b.name}${b.isCurrent ? ' *' : ''} → "${b.purpose}"`);
     }
-    lines.push("");
+    lines.push('');
   }
 
   // === CURRENT MEMORY STATE ===
-  lines.push("═══ CURRENT MEMORY STATE ═══");
-  lines.push("");
+  lines.push('═══ CURRENT MEMORY STATE ═══');
+  lines.push('');
 
   if (memoryFiles.length === 0) {
-    lines.push("(no memory files yet)");
+    lines.push('(no memory files yet)');
   } else {
     for (const mf of memoryFiles) {
       lines.push(`${mf.file} (${mf.entries} entries, ${formatSize(mf.size)}):`);
       if (mf.entries === 0) {
-        lines.push("  (empty)");
+        lines.push('  (empty)');
       } else {
         // Show all entries for cross-reference (bullet entries and lesson headings)
-        const entryLines = mf.content.split("\n").filter((l) => /^- \[/.test(l) || /^### \[/.test(l));
+        const entryLines = mf.content
+          .split('\n')
+          .filter((l) => /^- \[/.test(l) || /^### \[/.test(l));
         for (const entry of entryLines) {
           lines.push(`  ${entry}`);
         }
       }
-      lines.push("");
+      lines.push('');
     }
   }
 
   // === LAST REFLECTION ===
-  lines.push("═══ LAST REFLECTION ═══");
-  lines.push("");
+  lines.push('═══ LAST REFLECTION ═══');
+  lines.push('');
   if (lastReflection) {
     lines.push(`(from ${lastReflection.file})`);
-    lines.push(lastReflection.summary || "(no summary)");
+    lines.push(lastReflection.summary || '(no summary)');
   } else {
-    lines.push("First reflection — no prior context.");
-    lines.push("");
-    lines.push("This is your first reflection for this project. Focus on:");
-    lines.push("1. Are the memory entries so far capturing the RIGHT things?");
-    lines.push("2. Are any decisions already outdated?");
-    lines.push("3. What implicit knowledge about this project have you NOT written down?");
-    lines.push("4. Are the system/ files (conventions, project overview) still accurate?");
+    lines.push('First reflection — no prior context.');
+    lines.push('');
+    lines.push('This is your first reflection for this project. Focus on:');
+    lines.push('1. Are the memory entries so far capturing the RIGHT things?');
+    lines.push('2. Are any decisions already outdated?');
+    lines.push('3. What implicit knowledge about this project have you NOT written down?');
+    lines.push('4. Are the system/ files (conventions, project overview) still accurate?');
   }
-  lines.push("");
+  lines.push('');
 
   // === COMPACTION MODE ===
   if (flags.compaction) {
-    lines.push("═══ COMPACTION MODE ═══");
-    lines.push("Your context window is filling up. Focus on:");
-    lines.push("1. Summarize work into concise status (not deep analysis)");
-    lines.push("2. Identify memory entries to archive");
-    lines.push("3. Identify system/ files to shorten or unpin");
-    lines.push("4. After saving, consider unpinning less critical system files");
-    lines.push("");
+    lines.push('═══ COMPACTION MODE ═══');
+    lines.push('Your context window is filling up. Focus on:');
+    lines.push('1. Summarize work into concise status (not deep analysis)');
+    lines.push('2. Identify memory entries to archive');
+    lines.push('3. Identify system/ files to shorten or unpin');
+    lines.push('4. After saving, consider unpinning less critical system files');
+    lines.push('');
   }
 
   // === REFLECTION QUESTIONS ===
-  lines.push("═══ REFLECTION QUESTIONS ═══");
-  lines.push("");
-  lines.push("1. PATTERNS: What recurring approaches or successful strategies emerged?");
-  lines.push("2. LESSONS: Were any problems debugged/fixed? Record each as a problem→resolution pair.");
-  lines.push("3. CONTRADICTIONS: Do any new entries conflict with existing ones?");
-  lines.push("4. GAPS: What important context is NOT yet captured?");
-  lines.push("5. STALE: Are any existing entries outdated?");
-  lines.push("6. THEMES: What overarching directions are emerging?");
-  lines.push("");
+  lines.push('═══ REFLECTION QUESTIONS ═══');
+  lines.push('');
+  lines.push('1. PATTERNS: What recurring approaches or successful strategies emerged?');
+  lines.push(
+    '2. LESSONS: Were any problems debugged/fixed? Record each as a problem→resolution pair.',
+  );
+  lines.push('3. CONTRADICTIONS: Do any new entries conflict with existing ones?');
+  lines.push('4. GAPS: What important context is NOT yet captured?');
+  lines.push('5. STALE: Are any existing entries outdated?');
+  lines.push('6. THEMES: What overarching directions are emerging?');
+  lines.push('');
 
   // === INSTRUCTIONS ===
-  lines.push("═══ INSTRUCTIONS ═══");
-  lines.push("");
-  lines.push("After reasoning, call:");
+  lines.push('═══ INSTRUCTIONS ═══');
+  lines.push('');
+  lines.push('After reasoning, call:');
   lines.push('  amem reflect save --content "YOUR_REFLECTION"');
-  lines.push("");
-  lines.push("Use this format:");
-  lines.push("");
-  lines.push("## Patterns Identified");
-  lines.push("- <pattern>");
-  lines.push("");
-  lines.push("## Decisions Validated");
-  lines.push("- <decision confirmed by recent work>");
-  lines.push("");
-  lines.push("## Contradictions Found");
-  lines.push("- <what conflicts, and resolution>");
-  lines.push("");
-  lines.push("## Stale Entries");
-  lines.push("- <file>: <entry to flag>");
-  lines.push("");
-  lines.push("## Lessons Learned");
-  lines.push("- type: lesson");
-  lines.push("  text: <short title>");
-  lines.push("  problem: <what went wrong>");
-  lines.push("  resolution: <what fixed it>");
-  lines.push("");
-  lines.push("## Gaps Filled");
-  lines.push("- type: decision|pattern|mistake|note");
-  lines.push("  text: <new entry to add>");
-  lines.push("");
-  lines.push("## Themes");
-  lines.push("- <overarching theme>");
-  lines.push("");
-  lines.push("## Summary");
-  lines.push("<2-3 sentence summary>");
+  lines.push('');
+  lines.push('Use this format:');
+  lines.push('');
+  lines.push('## Patterns Identified');
+  lines.push('- <pattern>');
+  lines.push('');
+  lines.push('## Decisions Validated');
+  lines.push('- <decision confirmed by recent work>');
+  lines.push('');
+  lines.push('## Contradictions Found');
+  lines.push('- <what conflicts, and resolution>');
+  lines.push('');
+  lines.push('## Stale Entries');
+  lines.push('- <file>: <entry to flag>');
+  lines.push('');
+  lines.push('## Lessons Learned');
+  lines.push('- type: lesson');
+  lines.push('  text: <short title>');
+  lines.push('  problem: <what went wrong>');
+  lines.push('  resolution: <what fixed it>');
+  lines.push('');
+  lines.push('## Gaps Filled');
+  lines.push('- type: decision|pattern|mistake|note');
+  lines.push('  text: <new entry to add>');
+  lines.push('');
+  lines.push('## Themes');
+  lines.push('- <overarching theme>');
+  lines.push('');
+  lines.push('## Summary');
+  lines.push('<2-3 sentence summary>');
 
-  return { empty: false, prompt: lines.join("\n"), state };
+  return { empty: false, prompt: lines.join('\n'), state };
 }

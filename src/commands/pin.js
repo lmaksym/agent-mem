@@ -1,22 +1,22 @@
-import { contextDir as getContextDir } from "../core/context-root.js";
-import { moveContextFile, readContextFile } from "../core/fs.js";
-import { existsSync } from "node:fs";
-import { join, basename } from "node:path";
+import { contextDir as getContextDir } from '../core/context-root.js';
+import { moveContextFile, readContextFile } from '../core/fs.js';
+import { existsSync } from 'node:fs';
+import { join, basename } from 'node:path';
 
 export default async function pin({ args, flags }) {
   const root = flags._contextRoot;
   const ctxDir = getContextDir(root);
 
   if (!args.length) {
-    console.error("❌ Usage: agent-mem pin <path>");
-    console.error("Example: agent-mem pin memory/decisions.md");
+    console.error('❌ Usage: agent-mem pin <path>');
+    console.error('Example: agent-mem pin memory/decisions.md');
     console.error("Moves the file into system/ so it's always in agent context.");
     process.exit(1);
   }
 
   const relPath = args[0];
-  if (relPath.startsWith("system/")) {
-    console.log("ℹ️  Already pinned (in system/).");
+  if (relPath.startsWith('system/')) {
+    console.log('ℹ️  Already pinned (in system/).');
     return;
   }
 

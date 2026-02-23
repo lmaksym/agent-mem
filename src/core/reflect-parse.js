@@ -4,14 +4,14 @@
  */
 
 const SECTION_MAP = [
-  { key: "patterns", match: ["pattern"] },
-  { key: "decisions", match: ["decision", "validated"] },
-  { key: "lessons", match: ["lesson"] },
-  { key: "contradictions", match: ["contradict"] },
-  { key: "stale", match: ["stale"] },
-  { key: "gaps", match: ["gap", "new entr"] },
-  { key: "themes", match: ["theme"] },
-  { key: "summary", match: ["summar"] },
+  { key: 'patterns', match: ['pattern'] },
+  { key: 'decisions', match: ['decision', 'validated'] },
+  { key: 'lessons', match: ['lesson'] },
+  { key: 'contradictions', match: ['contradict'] },
+  { key: 'stale', match: ['stale'] },
+  { key: 'gaps', match: ['gap', 'new entr'] },
+  { key: 'themes', match: ['theme'] },
+  { key: 'summary', match: ['summar'] },
 ];
 
 /**
@@ -22,7 +22,7 @@ function normalizeSection(header) {
   for (const { key, match } of SECTION_MAP) {
     if (match.some((m) => lower.includes(m))) return key;
   }
-  return lower.replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+  return lower.replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
 }
 
 /**
@@ -36,7 +36,7 @@ export function parseReflection(text) {
   let currentSection = null;
   let recognizedCount = 0;
 
-  for (const line of text.split("\n")) {
+  for (const line of text.split('\n')) {
     const headerMatch = line.match(/^##\s+(.+)/);
     if (headerMatch) {
       currentSection = normalizeSection(headerMatch[1].trim());
@@ -64,8 +64,8 @@ export function parseReflection(text) {
  */
 function buildGapEntry(type, text, problem, resolution) {
   const entry = { type: type.toLowerCase(), text };
-  if (type.toLowerCase() === "lesson" && problem) entry.problem = problem;
-  if (type.toLowerCase() === "lesson" && resolution) entry.resolution = resolution;
+  if (type.toLowerCase() === 'lesson' && problem) entry.problem = problem;
+  if (type.toLowerCase() === 'lesson' && resolution) entry.resolution = resolution;
   return entry;
 }
 
@@ -85,7 +85,7 @@ export function extractGaps(lines) {
   let currentResolution = null;
 
   for (const line of lines) {
-    const trimmed = line.trim().replace(/^-\s*/, "");
+    const trimmed = line.trim().replace(/^-\s*/, '');
 
     const typeMatch = trimmed.match(/^type:\s*(decision|pattern|mistake|note|lesson)/i);
     if (typeMatch) {
@@ -120,7 +120,9 @@ export function extractGaps(lines) {
 
     // If line doesn't match type/text pattern, treat as inline entry
     // e.g. "- type: pattern, text: Always do X"
-    const inlineMatch = trimmed.match(/type:\s*(decision|pattern|mistake|note|lesson)\s*[,;]\s*text:\s*(.+)/i);
+    const inlineMatch = trimmed.match(
+      /type:\s*(decision|pattern|mistake|note|lesson)\s*[,;]\s*text:\s*(.+)/i,
+    );
     if (inlineMatch) {
       entries.push({ type: inlineMatch[1].toLowerCase(), text: inlineMatch[2].trim() });
       currentType = null;
@@ -146,7 +148,7 @@ export function extractStaleEntries(lines) {
 
   const entries = [];
   for (const line of lines) {
-    const trimmed = line.trim().replace(/^-\s*/, "");
+    const trimmed = line.trim().replace(/^-\s*/, '');
     // Pattern: "memory/file.md: some entry text"
     const match = trimmed.match(/^(memory\/[\w-]+\.md)(?:\s*(?:line\s*\d+)?)\s*[:—-]\s*(.+)/i);
     if (match) {
@@ -162,5 +164,5 @@ export function extractStaleEntries(lines) {
  */
 export function extractSummary(sections) {
   if (!sections.summary || !sections.summary.length) return null;
-  return sections.summary.join(" ").trim();
+  return sections.summary.join(' ').trim();
 }
