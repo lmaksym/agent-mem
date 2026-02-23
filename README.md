@@ -1,6 +1,6 @@
 # agent-mem
 
-[![npm version](https://img.shields.io/npm/v/agent-mem)](https://www.npmjs.com/package/agent-mem)
+[![npm version](https://img.shields.io/npm/v/@lmaksym/agent-mem)](https://www.npmjs.com/package/@lmaksym/agent-mem)
 [![CI](https://github.com/lmaksym/agent-context/actions/workflows/ci.yml/badge.svg)](https://github.com/lmaksym/agent-context/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
@@ -19,7 +19,7 @@ On `init`, the skill is automatically installed to the three [Agent Skills](http
 ## Install
 
 ```bash
-npm install -g agent-mem
+npm install -g @lmaksym/agent-mem
 ```
 
 Requires Node.js 20+. Zero runtime dependencies.
