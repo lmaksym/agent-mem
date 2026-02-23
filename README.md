@@ -22,7 +22,7 @@ On `init`, the skill is automatically installed to the three [Agent Skills](http
 npm install -g agent-mem
 ```
 
-Requires Node.js 18+. Zero runtime dependencies.
+Requires Node.js 20+. Zero runtime dependencies.
 
 ## Quick Start
 

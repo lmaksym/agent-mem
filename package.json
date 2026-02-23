@@ -40,7 +40,7 @@
     "url": "https://github.com/lmaksym/agent-context/issues"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "files": [
     "bin/",

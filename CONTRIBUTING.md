@@ -15,7 +15,7 @@ No build step required — the project runs directly as ESM.
 
 ## Requirements
 
-- **Node.js 18+** (ESM-only, no CommonJS)
+- **Node.js 20+** (ESM-only, no CommonJS)
 - **Zero runtime dependencies** — PRs adding runtime deps will not be accepted. Dev dependencies (testing, formatting) are fine.
 
 ## Code Style
