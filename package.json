@@ -33,11 +33,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lmaksym/agent-context.git"
+    "url": "https://github.com/lmaksym/agent-mem.git"
   },
-  "homepage": "https://github.com/lmaksym/agent-context",
+  "homepage": "https://github.com/lmaksym/agent-mem",
   "bugs": {
-    "url": "https://github.com/lmaksym/agent-context/issues"
+    "url": "https://github.com/lmaksym/agent-mem/issues"
   },
   "engines": {
     "node": ">=20"

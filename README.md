@@ -1,7 +1,7 @@
 # agent-mem
 
 [![npm version](https://img.shields.io/npm/v/@lmaksym/agent-mem)](https://www.npmjs.com/package/@lmaksym/agent-mem)
-[![CI](https://github.com/lmaksym/agent-context/actions/workflows/ci.yml/badge.svg)](https://github.com/lmaksym/agent-context/actions/workflows/ci.yml)
+[![CI](https://github.com/lmaksym/agent-mem/actions/workflows/ci.yml/badge.svg)](https://github.com/lmaksym/agent-mem/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 Persistent, git-backed memory for AI coding agents.

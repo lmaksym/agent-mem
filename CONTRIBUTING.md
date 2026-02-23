@@ -5,8 +5,8 @@ Thanks for your interest in contributing! This guide will help you get started.
 ## Development Setup
 
 ```bash
-git clone https://github.com/lmaksym/agent-context.git
-cd agent-context
+git clone https://github.com/lmaksym/agent-mem.git
+cd agent-mem
 npm install
 npm test
 ```
